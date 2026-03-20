@@ -1,1404 +1,2396 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VELOCITTA — Bicicletas & Performance</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --black: #0a0a0a;
-    --deep: #111214;
-    --card: #16181c;
-    --border: #2a2d35;
-    --orange: #ff5c00;
-    --orange-glow: #ff5c0044;
-    --orange-dim: #cc4a00;
-    --white: #f0ece4;
-    --gray: #8a8d96;
-    --light: #c8c4bc;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-condensed: 'Barlow Condensed', sans-serif;
-    --font-body: 'Barlow', sans-serif;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELOCITTA — Bicicletas & Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --deep: #111214;
+            --card: #16181c;
+            --border: #2a2d35;
+            --orange: #ff5c00;
+            --orange-glow: #ff5c0044;
+            --orange-dim: #cc4a00;
+            --white: #f0ece4;
+            --gray: #8a8d96;
+            --light: #c8c4bc;
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-condensed: 'Barlow Condensed', sans-serif;
+            --font-body: 'Barlow', sans-serif;
+        }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  html { scroll-behavior: smooth; overflow-x: hidden; }
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    cursor: none;
-    overflow-x: hidden;
-  }
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            cursor: none;
+            overflow-x: hidden;
+        }
 
-  /* CUSTOM CURSOR */
-  #cursor {
-    position: fixed; width: 10px; height: 10px;
-    background: var(--orange); border-radius: 50%;
-    pointer-events: none; z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-    mix-blend-mode: normal;
-  }
-  #cursor-ring {
-    position: fixed; width: 36px; height: 36px;
-    border: 1.5px solid var(--orange);
-    border-radius: 50%; pointer-events: none; z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-    opacity: 0.6;
-  }
-  body:hover #cursor { opacity: 1; }
+        /* CUSTOM CURSOR */
+        #cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--orange);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: normal;
+        }
 
-  /* LOADER */
-  #loader {
-    position: fixed; inset: 0; background: var(--black); z-index: 10000;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 20px;
-  }
-  #loader .load-text {
-    font-family: var(--font-display); font-size: clamp(48px, 10vw, 120px);
-    letter-spacing: 0.08em; color: var(--white);
-    overflow: hidden; display: flex;
-  }
-  #loader .load-text span { display: inline-block; transform: translateY(100%); opacity: 0; }
-  #loader .load-bar {
-    width: 200px; height: 2px; background: var(--border); position: relative; overflow: hidden;
-  }
-  #loader .load-fill {
-    height: 100%; background: var(--orange); width: 0%; transition: width 1.5s ease;
-  }
-  #loader .load-sub {
-    font-family: var(--font-condensed); font-size: 13px;
-    letter-spacing: 0.3em; color: var(--gray); text-transform: uppercase;
-    opacity: 0; transition: opacity 0.5s;
-  }
+        #cursor-ring {
+            position: fixed;
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--orange);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: all 0.15s ease;
+            opacity: 0.6;
+        }
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    padding: 0 40px; height: 72px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s, background 0.3s;
-  }
-  nav.scrolled { border-bottom-color: var(--border); background: rgba(10,10,10,0.97); }
+        body:hover #cursor {
+            opacity: 1;
+        }
 
-  .nav-logo {
-    font-family: var(--font-display); font-size: 28px; letter-spacing: 0.1em;
-    color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px;
-  }
-  .nav-logo .logo-dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; }
+        /* LOADER */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-  .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a {
-    font-family: var(--font-condensed); font-size: 13px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--gray); text-decoration: none;
-    transition: color 0.2s; position: relative;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-    height: 1px; background: var(--orange); transform: scaleX(0);
-    transition: transform 0.3s; transform-origin: right;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+        #loader .load-text {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 10vw, 120px);
+            letter-spacing: 0.08em;
+            color: var(--white);
+            overflow: hidden;
+            display: flex;
+        }
 
-  .nav-actions { display: flex; gap: 16px; align-items: center; }
-  .nav-cart {
-    position: relative; background: none; border: 1px solid var(--border);
-    color: var(--white); padding: 8px 20px; font-family: var(--font-condensed);
-    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
-    cursor: none; transition: all 0.3s;
-  }
-  .nav-cart:hover { border-color: var(--orange); color: var(--orange); }
-  .cart-count {
-    position: absolute; top: -6px; right: -6px; background: var(--orange);
-    color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-condensed); font-weight: 700;
-  }
+        #loader .load-text span {
+            display: inline-block;
+            transform: translateY(100%);
+            opacity: 0;
+        }
 
-  /* HERO */
-  #hero {
-    min-height: 100vh; position: relative; overflow: hidden;
-    display: flex; align-items: center;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: 
-      radial-gradient(ellipse 60% 80% at 70% 50%, #1a0a00 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 30% 80%, #0d1520 0%, transparent 50%),
-      var(--black);
-  }
-  .hero-grid {
-    position: absolute; inset: 0; opacity: 0.06;
-    background-image: 
-      linear-gradient(rgba(255,92,0,0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,92,0,0.5) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 80%);
-  }
+        #loader .load-bar {
+            width: 200px;
+            height: 2px;
+            background: var(--border);
+            position: relative;
+            overflow: hidden;
+        }
 
-  .hero-wheel {
-    position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
-    width: min(700px, 80vw); height: min(700px, 80vw);
-    opacity: 0.12;
-    animation: rotateWheel 30s linear infinite;
-  }
-  @keyframes rotateWheel {
-    from { transform: translateY(-50%) rotate(0deg); }
-    to { transform: translateY(-50%) rotate(360deg); }
-  }
+        #loader .load-fill {
+            height: 100%;
+            background: var(--orange);
+            width: 0%;
+            transition: width 1.5s ease;
+        }
 
-  .hero-content {
-    position: relative; z-index: 2; padding: 0 40px; max-width: 900px;
-    margin-top: 72px;
-  }
-  .hero-eyebrow {
-    font-family: var(--font-condensed); font-size: 13px; letter-spacing: 0.4em;
-    color: var(--orange); text-transform: uppercase; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 12px; opacity: 0;
-    animation: fadeUp 0.8s ease 0.5s forwards;
-  }
-  .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--orange); }
+        #loader .load-sub {
+            font-family: var(--font-condensed);
+            font-size: 13px;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
 
-  .hero-title {
-    font-family: var(--font-display); font-size: clamp(72px, 12vw, 180px);
-    line-height: 0.9; letter-spacing: 0.02em; color: var(--white);
-    margin-bottom: 30px;
-  }
-  .hero-title .line { overflow: hidden; display: block; }
-  .hero-title .line span { display: block; transform: translateY(100%); opacity: 0; }
-  .hero-title .accent { color: var(--orange); }
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 40px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.98), transparent);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s, background 0.3s;
+        }
 
-  .hero-desc {
-    font-family: var(--font-condensed); font-size: clamp(16px, 2vw, 20px);
-    color: var(--light); font-weight: 300; max-width: 460px; line-height: 1.6;
-    margin-bottom: 40px; letter-spacing: 0.02em;
-    opacity: 0; animation: fadeUp 0.8s ease 1.2s forwards;
-  }
+        nav.scrolled {
+            border-bottom-color: var(--border);
+            background: rgba(10, 10, 10, 0.97);
+        }
 
-  .hero-actions {
-    display: flex; gap: 16px; flex-wrap: wrap;
-    opacity: 0; animation: fadeUp 0.8s ease 1.5s forwards;
-  }
-  .btn-primary {
-    background: var(--orange); color: var(--black); border: none;
-    padding: 16px 40px; font-family: var(--font-condensed); font-size: 14px;
-    font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
-    cursor: none; position: relative; overflow: hidden; transition: all 0.3s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-  .btn-primary::before {
-    content: ''; position: absolute; inset: 0; background: var(--white);
-    transform: translateX(-110%) skewX(-12deg); transition: transform 0.4s ease;
-  }
-  .btn-primary:hover::before { transform: translateX(110%) skewX(-12deg); }
-  .btn-primary:hover { box-shadow: 0 0 40px var(--orange-glow); }
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 28px;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .btn-outline {
-    background: none; color: var(--white); border: 1px solid var(--border);
-    padding: 16px 40px; font-family: var(--font-condensed); font-size: 14px;
-    letter-spacing: 0.25em; text-transform: uppercase; cursor: none;
-    transition: all 0.3s;
-  }
-  .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+        .nav-logo .logo-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+        }
 
-  .hero-stats {
-    position: absolute; bottom: 60px; right: 40px; display: flex; gap: 48px;
-    opacity: 0; animation: fadeUp 0.8s ease 1.8s forwards;
-  }
-  .stat { text-align: right; }
-  .stat-num {
-    font-family: var(--font-display); font-size: 48px; color: var(--orange);
-    line-height: 1; letter-spacing: 0.02em;
-  }
-  .stat-label {
-    font-family: var(--font-condensed); font-size: 11px; letter-spacing: 0.3em;
-    color: var(--gray); text-transform: uppercase;
-  }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
 
-  .scroll-indicator {
-    position: absolute; bottom: 30px; left: 40px;
-    display: flex; align-items: center; gap: 12px;
-    font-family: var(--font-condensed); font-size: 11px;
-    letter-spacing: 0.3em; color: var(--gray); text-transform: uppercase;
-    opacity: 0; animation: fadeUp 0.8s ease 2s forwards;
-  }
-  .scroll-line {
-    width: 40px; height: 1px; background: var(--gray); position: relative; overflow: hidden;
-  }
-  .scroll-line::after {
-    content: ''; position: absolute; inset: 0; background: var(--orange);
-    animation: scrollAnim 2s ease infinite;
-  }
-  @keyframes scrollAnim {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
+        .nav-links a {
+            font-family: var(--font-condensed);
+            font-size: 13px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s;
+            position: relative;
+        }
 
-  /* MARQUEE */
-  .marquee-section {
-    background: var(--orange); padding: 14px 0; overflow: hidden;
-    border-top: 1px solid var(--orange-dim);
-    border-bottom: 1px solid var(--orange-dim);
-  }
-  .marquee-track {
-    display: flex; gap: 0; white-space: nowrap;
-    animation: marquee 20s linear infinite;
-  }
-  .marquee-item {
-    font-family: var(--font-condensed); font-size: 14px; font-weight: 600;
-    letter-spacing: 0.3em; text-transform: uppercase; color: var(--black);
-    padding: 0 40px; display: flex; align-items: center; gap: 16px;
-  }
-  .marquee-dot { width: 5px; height: 5px; background: var(--black); border-radius: 50%; }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--orange);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+            transform-origin: right;
+        }
 
-  /* SERVICES */
-  #services { padding: 120px 40px; }
-  .section-header { margin-bottom: 80px; }
-  .section-label {
-    font-family: var(--font-condensed); font-size: 12px; letter-spacing: 0.4em;
-    color: var(--orange); text-transform: uppercase; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-label::before { content: '—'; color: var(--orange); }
-  .section-title {
-    font-family: var(--font-display); font-size: clamp(48px, 7vw, 100px);
-    line-height: 0.9; letter-spacing: 0.02em; color: var(--white);
-  }
-  .section-title .accent { color: var(--orange); }
+        .nav-links a:hover {
+            color: var(--white);
+        }
 
-  .services-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2px; background: var(--border);
-  }
-  .service-card {
-    background: var(--deep); padding: 48px 36px; position: relative;
-    overflow: hidden; cursor: none; transition: background 0.4s;
-    group: true;
-  }
-  .service-card::before {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 3px; background: var(--orange); transform: scaleX(0);
-    transition: transform 0.4s; transform-origin: left;
-  }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-card:hover { background: var(--card); }
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
 
-  .service-num {
-    font-family: var(--font-display); font-size: 72px; color: var(--border);
-    position: absolute; top: 20px; right: 24px; line-height: 1;
-    transition: color 0.4s;
-  }
-  .service-card:hover .service-num { color: var(--orange-glow); }
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
 
-  .service-icon {
-    width: 52px; height: 52px; margin-bottom: 28px;
-    color: var(--orange);
-  }
-  .service-name {
-    font-family: var(--font-condensed); font-size: 26px; font-weight: 700;
-    letter-spacing: 0.05em; text-transform: uppercase; color: var(--white);
-    margin-bottom: 16px;
-  }
-  .service-desc {
-    font-size: 14px; color: var(--gray); line-height: 1.7; font-weight: 300;
-    margin-bottom: 24px;
-  }
-  .service-link {
-    font-family: var(--font-condensed); font-size: 12px; letter-spacing: 0.25em;
-    color: var(--orange); text-transform: uppercase; text-decoration: none;
-    display: flex; align-items: center; gap: 8px; transition: gap 0.3s;
-  }
-  .service-link:hover { gap: 14px; }
+        .nav-cart {
+            position: relative;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 8px 20px;
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.3s;
+        }
 
-  /* PRODUCTS */
-  #produtos { padding: 120px 40px; background: var(--deep); }
+        .nav-cart:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
 
-  .filter-bar {
-    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 48px;
-  }
-  .filter-btn {
-    font-family: var(--font-condensed); font-size: 12px; letter-spacing: 0.25em;
-    text-transform: uppercase; padding: 8px 24px; border: 1px solid var(--border);
-    background: none; color: var(--gray); cursor: none; transition: all 0.25s;
-  }
-  .filter-btn.active, .filter-btn:hover {
-    border-color: var(--orange); color: var(--orange); background: var(--orange-glow);
-  }
+        .cart-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--orange);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-condensed);
+            font-weight: 700;
+        }
 
-  .products-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2px; background: var(--border);
-  }
-  .product-card {
-    background: var(--black); overflow: hidden; cursor: none;
-    position: relative; transition: transform 0.3s;
-  }
-  .product-card:hover { z-index: 2; transform: scale(1.02); }
+        /* HERO */
+        #hero {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
 
-  .product-img {
-    width: 100%; aspect-ratio: 4/3; background: var(--card);
-    position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-  }
-  .product-img-placeholder {
-    font-size: 80px; opacity: 0.15; filter: grayscale(1);
-    transition: transform 0.6s ease, opacity 0.4s;
-  }
-  .product-card:hover .product-img-placeholder { transform: scale(1.1) rotate(-5deg); opacity: 0.25; }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 80% at 70% 50%, #1a0a00 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 30% 80%, #0d1520 0%, transparent 50%),
+                var(--black);
+        }
 
-  .product-badge {
-    position: absolute; top: 16px; left: 16px;
-    font-family: var(--font-condensed); font-size: 10px; letter-spacing: 0.25em;
-    text-transform: uppercase; padding: 4px 12px;
-  }
-  .badge-new { background: var(--orange); color: var(--black); }
-  .badge-promo { background: #00c853; color: var(--black); }
-  .badge-destaque { background: var(--white); color: var(--black); }
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            background-image:
+                linear-gradient(rgba(255, 92, 0, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 92, 0, 0.5) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 80%);
+        }
 
-  .product-actions-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.9));
-    padding: 24px 16px 16px; transform: translateY(100%);
-    transition: transform 0.3s ease;
-  }
-  .product-card:hover .product-actions-overlay { transform: translateY(0); }
-  .product-add-btn {
-    width: 100%; background: var(--orange); border: none; color: var(--black);
-    padding: 12px; font-family: var(--font-condensed); font-size: 13px;
-    font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-    cursor: none; transition: background 0.2s;
-  }
-  .product-add-btn:hover { background: var(--white); }
+        .hero-wheel {
+            position: absolute;
+            right: -80px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: min(700px, 80vw);
+            height: min(700px, 80vw);
+            opacity: 0.12;
+            animation: rotateWheel 30s linear infinite;
+        }
 
-  .product-info { padding: 20px 20px 24px; }
-  .product-category {
-    font-family: var(--font-condensed); font-size: 11px; letter-spacing: 0.3em;
-    color: var(--orange); text-transform: uppercase; margin-bottom: 8px;
-  }
-  .product-name {
-    font-family: var(--font-condensed); font-size: 18px; font-weight: 600;
-    color: var(--white); letter-spacing: 0.05em; margin-bottom: 12px;
-    text-transform: uppercase;
-  }
-  .product-pricing { display: flex; align-items: center; gap: 12px; }
-  .product-price {
-    font-family: var(--font-display); font-size: 28px; color: var(--orange);
-    letter-spacing: 0.02em;
-  }
-  .product-price-old {
-    font-family: var(--font-condensed); font-size: 14px; color: var(--gray);
-    text-decoration: line-through;
-  }
+        @keyframes rotateWheel {
+            from {
+                transform: translateY(-50%) rotate(0deg);
+            }
 
-  /* BANNER CTA */
-  #cta-banner {
-    padding: 100px 40px; position: relative; overflow: hidden;
-    background: var(--orange);
-  }
-  .cta-bg-text {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-family: var(--font-display); font-size: clamp(100px, 20vw, 300px);
-    color: rgba(0,0,0,0.1); white-space: nowrap; letter-spacing: 0.05em;
-    pointer-events: none; user-select: none;
-  }
-  .cta-content { position: relative; z-index: 2; max-width: 700px; }
-  .cta-title {
-    font-family: var(--font-display); font-size: clamp(52px, 8vw, 110px);
-    color: var(--black); line-height: 0.9; letter-spacing: 0.02em;
-    margin-bottom: 24px;
-  }
-  .cta-sub {
-    font-family: var(--font-condensed); font-size: 18px; color: rgba(0,0,0,0.7);
-    margin-bottom: 36px; font-weight: 300;
-  }
-  .btn-dark {
-    background: var(--black); color: var(--white); border: none;
-    padding: 18px 48px; font-family: var(--font-condensed); font-size: 14px;
-    font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
-    cursor: none; transition: all 0.3s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-  .btn-dark:hover { background: var(--white); color: var(--black); }
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
 
-  /* BRANDS */
-  #marcas { padding: 80px 40px; border-top: 1px solid var(--border); }
-  .brands-label {
-    font-family: var(--font-condensed); font-size: 11px; letter-spacing: 0.4em;
-    color: var(--gray); text-transform: uppercase; text-align: center;
-    margin-bottom: 48px;
-  }
-  .brands-row {
-    display: flex; align-items: center; justify-content: center;
-    flex-wrap: wrap; gap: 48px;
-  }
-  .brand-logo {
-    font-family: var(--font-display); font-size: 28px; color: var(--border);
-    letter-spacing: 0.1em; transition: color 0.3s; cursor: none;
-  }
-  .brand-logo:hover { color: var(--orange); }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 40px;
+            max-width: 900px;
+            margin-top: 72px;
+        }
 
-  /* WORKSHOP */
-  #workshop { padding: 120px 40px; }
-  .workshop-layout {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-  }
-  .workshop-visual {
-    position: relative; aspect-ratio: 4/3; background: var(--card);
-    overflow: hidden; display: flex; align-items: center; justify-content: center;
-  }
-  .workshop-visual-bg {
-    font-size: 200px; opacity: 0.07; filter: grayscale(1);
-    animation: pulse 4s ease infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.07; }
-    50% { transform: scale(1.05); opacity: 0.12; }
-  }
-  .workshop-visual-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 60%, var(--orange) 200%);
-    opacity: 0.15;
-  }
-  .workshop-badge {
-    position: absolute; bottom: -1px; right: -1px;
-    background: var(--orange); padding: 20px 28px;
-    font-family: var(--font-display); font-size: 36px; color: var(--black);
-    line-height: 1; letter-spacing: 0.02em;
-  }
-  .workshop-badge span { font-family: var(--font-condensed); font-size: 11px; display: block; letter-spacing: 0.3em; }
+        .hero-eyebrow {
+            font-family: var(--font-condensed);
+            font-size: 13px;
+            letter-spacing: 0.4em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
 
-  .workshop-list { display: flex; flex-direction: column; gap: 0; margin: 36px 0; border: 1px solid var(--border); }
-  .workshop-item {
-    padding: 20px 24px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 16px;
-    transition: background 0.3s; cursor: none;
-  }
-  .workshop-item:last-child { border-bottom: none; }
-  .workshop-item:hover { background: var(--card); }
-  .workshop-item-icon { color: var(--orange); font-size: 20px; flex-shrink: 0; }
-  .workshop-item-text { font-family: var(--font-condensed); font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-  .workshop-item-price { margin-left: auto; font-family: var(--font-display); font-size: 22px; color: var(--orange); }
+        .hero-eyebrow::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--orange);
+        }
 
-  /* TESTIMONIALS */
-  #depoimentos { padding: 120px 40px; background: var(--deep); }
-  .testimonials-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2px;
-    background: var(--border); margin-top: 60px;
-  }
-  .testimonial-card {
-    background: var(--deep); padding: 40px 36px;
-    transition: background 0.3s;
-  }
-  .testimonial-card:hover { background: var(--card); }
-  .stars { color: var(--orange); font-size: 14px; letter-spacing: 2px; margin-bottom: 20px; }
-  .testimonial-text {
-    font-size: 15px; color: var(--light); line-height: 1.7; font-style: italic;
-    margin-bottom: 24px; font-weight: 300;
-  }
-  .testimonial-text::before { content: '"'; font-family: var(--font-display); font-size: 40px; color: var(--orange); display: block; margin-bottom: -10px; }
-  .testimonial-author {
-    font-family: var(--font-condensed); font-size: 14px; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--white);
-  }
-  .testimonial-role { font-size: 12px; color: var(--gray); margin-top: 4px; }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(72px, 12vw, 180px);
+            line-height: 0.9;
+            letter-spacing: 0.02em;
+            color: var(--white);
+            margin-bottom: 30px;
+        }
 
-  /* CONTACT */
-  #contato { padding: 120px 40px; }
-  .contact-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; }
-  .contact-info { display: flex; flex-direction: column; gap: 0; }
-  .contact-item {
-    padding: 28px 0; border-bottom: 1px solid var(--border);
-    display: flex; gap: 20px;
-  }
-  .contact-item-icon { color: var(--orange); font-size: 20px; margin-top: 2px; flex-shrink: 0; }
-  .contact-item-label {
-    font-family: var(--font-condensed); font-size: 11px; letter-spacing: 0.3em;
-    color: var(--gray); text-transform: uppercase; margin-bottom: 6px;
-  }
-  .contact-item-value {
-    font-family: var(--font-condensed); font-size: 18px; font-weight: 600;
-    color: var(--white); letter-spacing: 0.03em;
-  }
+        .hero-title .line {
+            overflow: hidden;
+            display: block;
+        }
 
-  .contact-form { display: flex; flex-direction: column; gap: 16px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-  .form-label {
-    font-family: var(--font-condensed); font-size: 11px; letter-spacing: 0.3em;
-    color: var(--gray); text-transform: uppercase;
-  }
-  .form-input, .form-select, .form-textarea {
-    background: var(--card); border: 1px solid var(--border); color: var(--white);
-    padding: 14px 18px; font-family: var(--font-condensed); font-size: 15px;
-    outline: none; transition: border-color 0.3s; cursor: none;
-    -webkit-appearance: none;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color: var(--orange);
-  }
-  .form-textarea { resize: vertical; min-height: 120px; }
-  .form-select option { background: var(--card); }
+        .hero-title .line span {
+            display: block;
+            transform: translateY(100%);
+            opacity: 0;
+        }
 
-  /* FOOTER */
-  footer {
-    background: var(--deep); border-top: 1px solid var(--border);
-    padding: 80px 40px 40px;
-  }
-  .footer-grid {
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
-    margin-bottom: 60px;
-  }
-  .footer-brand-name {
-    font-family: var(--font-display); font-size: 48px; color: var(--white);
-    letter-spacing: 0.05em; margin-bottom: 16px;
-  }
-  .footer-brand-name span { color: var(--orange); }
-  .footer-desc { font-size: 14px; color: var(--gray); line-height: 1.7; max-width: 300px; }
-  .footer-social { display: flex; gap: 12px; margin-top: 24px; }
-  .footer-social a {
-    width: 40px; height: 40px; border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gray); text-decoration: none; font-size: 14px;
-    transition: all 0.3s; cursor: none;
-  }
-  .footer-social a:hover { border-color: var(--orange); color: var(--orange); }
+        .hero-title .accent {
+            color: var(--orange);
+        }
 
-  .footer-col-title {
-    font-family: var(--font-condensed); font-size: 12px; letter-spacing: 0.3em;
-    color: var(--orange); text-transform: uppercase; margin-bottom: 24px;
-  }
-  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-links a {
-    font-family: var(--font-condensed); font-size: 14px; color: var(--gray);
-    text-decoration: none; transition: color 0.2s; letter-spacing: 0.03em;
-    cursor: none;
-  }
-  .footer-links a:hover { color: var(--white); }
+        .hero-desc {
+            font-family: var(--font-condensed);
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--light);
+            font-weight: 300;
+            max-width: 460px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            letter-spacing: 0.02em;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.2s forwards;
+        }
 
-  .footer-bottom {
-    padding-top: 32px; border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-  }
-  .footer-copy {
-    font-family: var(--font-condensed); font-size: 12px; color: var(--gray);
-    letter-spacing: 0.1em;
-  }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.5s forwards;
+        }
 
-  /* CART SIDEBAR */
-  #cart-sidebar {
-    position: fixed; top: 0; right: 0; bottom: 0; width: 420px; max-width: 100vw;
-    background: var(--deep); border-left: 1px solid var(--border);
-    z-index: 2000; transform: translateX(100%); transition: transform 0.4s ease;
-    display: flex; flex-direction: column;
-  }
-  #cart-sidebar.open { transform: translateX(0); }
-  .cart-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-    z-index: 1999; opacity: 0; pointer-events: none; transition: opacity 0.4s;
-    backdrop-filter: blur(4px);
-  }
-  .cart-overlay.open { opacity: 1; pointer-events: all; }
+        .btn-primary {
+            background: var(--orange);
+            color: var(--black);
+            border: none;
+            padding: 16px 40px;
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
 
-  .cart-header {
-    padding: 28px 24px; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .cart-title {
-    font-family: var(--font-display); font-size: 32px; letter-spacing: 0.05em;
-  }
-  .cart-close {
-    background: none; border: 1px solid var(--border); color: var(--white);
-    width: 36px; height: 36px; cursor: none; display: flex; align-items: center;
-    justify-content: center; font-size: 16px; transition: all 0.3s;
-  }
-  .cart-close:hover { border-color: var(--orange); color: var(--orange); }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--white);
+            transform: translateX(-110%) skewX(-12deg);
+            transition: transform 0.4s ease;
+        }
 
-  .cart-items { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-  .cart-item {
-    background: var(--card); padding: 16px; display: flex; gap: 12px;
-    border: 1px solid var(--border);
-  }
-  .cart-item-thumb {
-    width: 64px; height: 64px; background: var(--deep);
-    display: flex; align-items: center; justify-content: center; font-size: 28px;
-    flex-shrink: 0;
-  }
-  .cart-item-info { flex: 1; }
-  .cart-item-name {
-    font-family: var(--font-condensed); font-size: 14px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
-  }
-  .cart-item-price { font-family: var(--font-display); font-size: 20px; color: var(--orange); }
-  .cart-item-remove {
-    background: none; border: none; color: var(--gray); cursor: none;
-    font-size: 18px; transition: color 0.2s;
-  }
-  .cart-item-remove:hover { color: var(--orange); }
+        .btn-primary:hover::before {
+            transform: translateX(110%) skewX(-12deg);
+        }
 
-  .cart-empty {
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 12px; color: var(--gray);
-  }
-  .cart-empty-icon { font-size: 48px; opacity: 0.3; }
-  .cart-empty-text { font-family: var(--font-condensed); font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; }
+        .btn-primary:hover {
+            box-shadow: 0 0 40px var(--orange-glow);
+        }
 
-  .cart-footer {
-    padding: 24px; border-top: 1px solid var(--border);
-  }
-  .cart-total {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-  }
-  .cart-total-label { font-family: var(--font-condensed); font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
-  .cart-total-value { font-family: var(--font-display); font-size: 36px; color: var(--white); }
-  .btn-checkout {
-    width: 100%; background: var(--orange); border: none; color: var(--black);
-    padding: 18px; font-family: var(--font-condensed); font-size: 14px;
-    font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; cursor: none;
-    transition: all 0.3s;
-  }
-  .btn-checkout:hover { background: var(--white); }
+        .btn-outline {
+            background: none;
+            color: var(--white);
+            border: 1px solid var(--border);
+            padding: 16px 40px;
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.3s;
+        }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+        .btn-outline:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
 
-  .reveal {
-    opacity: 0; transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+        .hero-stats {
+            position: absolute;
+            bottom: 60px;
+            right: 40px;
+            display: flex;
+            gap: 48px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.8s forwards;
+        }
 
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: var(--card); border: 1px solid var(--orange); padding: 16px 28px;
-    font-family: var(--font-condensed); font-size: 14px; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--white); z-index: 3000;
-    transition: transform 0.4s ease; border-left: 3px solid var(--orange);
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+        .stat {
+            text-align: right;
+        }
 
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero-content { padding: 0 20px; }
-    .hero-stats { right: 20px; gap: 24px; }
-    .stat-num { font-size: 36px; }
-    #services, #produtos, #workshop, #depoimentos, #contato { padding: 80px 20px; }
-    .workshop-layout { grid-template-columns: 1fr; gap: 40px; }
-    .contact-layout { grid-template-columns: 1fr; gap: 40px; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    #marcas, footer { padding: 60px 20px; }
-    #cta-banner { padding: 80px 20px; }
-  }
+        .stat-num {
+            font-family: var(--font-display);
+            font-size: 48px;
+            color: var(--orange);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
 
-  /* WHATSAPP FLOAT */
-  .whatsapp-float {
-    position: fixed; bottom: 30px; right: 30px; z-index: 500;
-    width: 56px; height: 56px; background: #25d366;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 26px; cursor: none; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: waBounce 2s ease infinite 3s;
-  }
-  .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(37,211,102,0.6); }
-  @keyframes waBounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-  }
-</style>
+        .stat-label {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 2s forwards;
+        }
+
+        .scroll-line {
+            width: 40px;
+            height: 1px;
+            background: var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--orange);
+            animation: scrollAnim 2s ease infinite;
+        }
+
+        @keyframes scrollAnim {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* MARQUEE */
+        .marquee-section {
+            background: var(--orange);
+            padding: 14px 0;
+            overflow: hidden;
+            border-top: 1px solid var(--orange-dim);
+            border-bottom: 1px solid var(--orange-dim);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 0;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee-item {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--black);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .marquee-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* SERVICES */
+        #services {
+            padding: 120px 40px;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            letter-spacing: 0.4em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-label::before {
+            content: '—';
+            color: var(--orange);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 7vw, 100px);
+            line-height: 0.9;
+            letter-spacing: 0.02em;
+            color: var(--white);
+        }
+
+        .section-title .accent {
+            color: var(--orange);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2px;
+            background: var(--border);
+        }
+
+        .service-card {
+            background: var(--deep);
+            padding: 48px 36px;
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+            transition: background 0.4s;
+            group: true;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--orange);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+            transform-origin: left;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            background: var(--card);
+        }
+
+        .service-num {
+            font-family: var(--font-display);
+            font-size: 72px;
+            color: var(--border);
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            line-height: 1;
+            transition: color 0.4s;
+        }
+
+        .service-card:hover .service-num {
+            color: var(--orange-glow);
+        }
+
+        .service-icon {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 28px;
+            color: var(--orange);
+        }
+
+        .service-name {
+            font-family: var(--font-condensed);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.7;
+            font-weight: 300;
+            margin-bottom: 24px;
+        }
+
+        .service-link {
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            letter-spacing: 0.25em;
+            color: var(--orange);
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.3s;
+        }
+
+        .service-link:hover {
+            gap: 14px;
+        }
+
+        /* PRODUCTS */
+        #produtos {
+            padding: 120px 40px;
+            background: var(--deep);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .filter-btn {
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 8px 24px;
+            border: 1px solid var(--border);
+            background: none;
+            color: var(--gray);
+            cursor: none;
+            transition: all 0.25s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+            background: var(--orange-glow);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2px;
+            background: var(--border);
+        }
+
+        .product-card {
+            background: var(--black);
+            overflow: hidden;
+            cursor: none;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            z-index: 2;
+            transform: scale(1.02);
+        }
+
+        .product-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: var(--card);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-placeholder {
+            font-size: 80px;
+            opacity: 0.15;
+            filter: grayscale(1);
+            transition: transform 0.6s ease, opacity 0.4s;
+        }
+
+        .product-card:hover .product-img-placeholder {
+            transform: scale(1.1) rotate(-5deg);
+            opacity: 0.25;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-family: var(--font-condensed);
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+        }
+
+        .badge-new {
+            background: var(--orange);
+            color: var(--black);
+        }
+
+        .badge-promo {
+            background: #00c853;
+            color: var(--black);
+        }
+
+        .badge-destaque {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .product-actions-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 24px 16px 16px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-actions-overlay {
+            transform: translateY(0);
+        }
+
+        .product-add-btn {
+            width: 100%;
+            background: var(--orange);
+            border: none;
+            color: var(--black);
+            padding: 12px;
+            font-family: var(--font-condensed);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: background 0.2s;
+        }
+
+        .product-add-btn:hover {
+            background: var(--white);
+        }
+
+        .product-info {
+            padding: 20px 20px 24px;
+        }
+
+        .product-category {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-family: var(--font-condensed);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .product-pricing {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-price {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--orange);
+            letter-spacing: 0.02em;
+        }
+
+        .product-price-old {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+
+        /* BANNER CTA */
+        #cta-banner {
+            padding: 100px 40px;
+            position: relative;
+            overflow: hidden;
+            background: var(--orange);
+        }
+
+        .cta-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: clamp(100px, 20vw, 300px);
+            color: rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(52px, 8vw, 110px);
+            color: var(--black);
+            line-height: 0.9;
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+        }
+
+        .cta-sub {
+            font-family: var(--font-condensed);
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 36px;
+            font-weight: 300;
+        }
+
+        .btn-dark {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 18px 48px;
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.3s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        .btn-dark:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* BRANDS */
+        #marcas {
+            padding: 80px 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .brands-label {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            color: var(--gray);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .brands-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 48px;
+        }
+
+        .brand-logo {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--border);
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+            cursor: none;
+        }
+
+        .brand-logo:hover {
+            color: var(--orange);
+        }
+
+        /* WORKSHOP */
+        #workshop {
+            padding: 120px 40px;
+        }
+
+        .workshop-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .workshop-visual {
+            position: relative;
+            aspect-ratio: 4/3;
+            background: var(--card);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workshop-visual-bg {
+            font-size: 200px;
+            opacity: 0.07;
+            filter: grayscale(1);
+            animation: pulse 4s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.07;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.12;
+            }
+        }
+
+        .workshop-visual-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 60%, var(--orange) 200%);
+            opacity: 0.15;
+        }
+
+        .workshop-badge {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            background: var(--orange);
+            padding: 20px 28px;
+            font-family: var(--font-display);
+            font-size: 36px;
+            color: var(--black);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+
+        .workshop-badge span {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            display: block;
+            letter-spacing: 0.3em;
+        }
+
+        .workshop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 36px 0;
+            border: 1px solid var(--border);
+        }
+
+        .workshop-item {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: background 0.3s;
+            cursor: none;
+        }
+
+        .workshop-item:last-child {
+            border-bottom: none;
+        }
+
+        .workshop-item:hover {
+            background: var(--card);
+        }
+
+        .workshop-item-icon {
+            color: var(--orange);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .workshop-item-text {
+            font-family: var(--font-condensed);
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .workshop-item-price {
+            margin-left: auto;
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--orange);
+        }
+
+        /* TESTIMONIALS */
+        #depoimentos {
+            padding: 120px 40px;
+            background: var(--deep);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2px;
+            background: var(--border);
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: var(--deep);
+            padding: 40px 36px;
+            transition: background 0.3s;
+        }
+
+        .testimonial-card:hover {
+            background: var(--card);
+        }
+
+        .stars {
+            color: var(--orange);
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--light);
+            line-height: 1.7;
+            font-style: italic;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-family: var(--font-display);
+            font-size: 40px;
+            color: var(--orange);
+            display: block;
+            margin-bottom: -10px;
+        }
+
+        .testimonial-author {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .testimonial-role {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        /* CONTACT */
+        #contato {
+            padding: 120px 40px;
+        }
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 80px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .contact-item {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 20px;
+        }
+
+        .contact-item-icon {
+            color: var(--orange);
+            font-size: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .contact-item-label {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .contact-item-value {
+            font-family: var(--font-condensed);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 0.03em;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 14px 18px;
+            font-family: var(--font-condensed);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+            cursor: none;
+            -webkit-appearance: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--orange);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-select option {
+            background: var(--card);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--deep);
+            border-top: 1px solid var(--border);
+            padding: 80px 40px 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand-name {
+            font-family: var(--font-display);
+            font-size: 48px;
+            color: var(--white);
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand-name span {
+            color: var(--orange);
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.7;
+            max-width: 300px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: none;
+        }
+
+        .footer-social a:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .footer-col-title {
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s;
+            letter-spacing: 0.03em;
+            cursor: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copy {
+            font-family: var(--font-condensed);
+            font-size: 12px;
+            color: var(--gray);
+            letter-spacing: 0.1em;
+        }
+
+        /* CART SIDEBAR */
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 420px;
+            max-width: 100vw;
+            background: var(--deep);
+            border-left: 1px solid var(--border);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            backdrop-filter: blur(4px);
+        }
+
+        .cart-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .cart-header {
+            padding: 28px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            letter-spacing: 0.05em;
+        }
+
+        .cart-close {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--white);
+            width: 36px;
+            height: 36px;
+            cursor: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .cart-close:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cart-item {
+            background: var(--card);
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .cart-item-thumb {
+            width: 64px;
+            height: 64px;
+            background: var(--deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--orange);
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: none;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .cart-item-remove:hover {
+            color: var(--orange);
+        }
+
+        .cart-empty {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: var(--gray);
+        }
+
+        .cart-empty-icon {
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        .cart-empty-text {
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .cart-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-total-label {
+            font-family: var(--font-condensed);
+            font-size: 13px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        .cart-total-value {
+            font-family: var(--font-display);
+            font-size: 36px;
+            color: var(--white);
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background: var(--orange);
+            border: none;
+            color: var(--black);
+            padding: 18px;
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: var(--white);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card);
+            border: 1px solid var(--orange);
+            padding: 16px 28px;
+            font-family: var(--font-condensed);
+            font-size: 14px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white);
+            z-index: 3000;
+            transition: transform 0.4s ease;
+            border-left: 3px solid var(--orange);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                padding: 0 20px;
+            }
+
+            .hero-stats {
+                right: 20px;
+                gap: 24px;
+            }
+
+            .stat-num {
+                font-size: 36px;
+            }
+
+            #services,
+            #produtos,
+            #workshop,
+            #depoimentos,
+            #contato {
+                padding: 80px 20px;
+            }
+
+            .workshop-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            #marcas,
+            footer {
+                padding: 60px 20px;
+            }
+
+            #cta-banner {
+                padding: 80px 20px;
+            }
+        }
+
+        /* WHATSAPP FLOAT */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 500;
+            width: 56px;
+            height: 56px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: none;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: waBounce 2s ease infinite 3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        @keyframes waBounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="load-text">
-    <span>V</span><span>E</span><span>L</span><span>O</span><span>C</span><span>I</span><span>T</span><span>T</span><span>A</span>
-  </div>
-  <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
-  <div class="load-sub" id="loadSub">Carregando experiência...</div>
-</div>
-
-<!-- CART OVERLAY -->
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-
-<!-- CART SIDEBAR -->
-<div id="cart-sidebar">
-  <div class="cart-header">
-    <div class="cart-title">CARRINHO</div>
-    <button class="cart-close" onclick="toggleCart()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">
-      <div class="cart-empty-icon">🚲</div>
-      <div class="cart-empty-text">Carrinho vazio</div>
-    </div>
-  </div>
-  <div class="cart-footer">
-    <div class="cart-total">
-      <div class="cart-total-label">Total</div>
-      <div class="cart-total-value" id="cartTotal">R$ 0</div>
-    </div>
-    <button class="btn-checkout" onclick="checkout()">FINALIZAR PEDIDO →</button>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav id="mainNav">
-  <a class="nav-logo" href="#">
-    <div class="logo-dot"></div>
-    VELOCITTA
-  </a>
-  <ul class="nav-links">
-    <li><a href="#services">Serviços</a></li>
-    <li><a href="#produtos">Produtos</a></li>
-    <li><a href="#workshop">Oficina</a></li>
-    <li><a href="#depoimentos">Avaliações</a></li>
-    <li><a href="#contato">Contato</a></li>
-  </ul>
-  <div class="nav-actions">
-    <button class="nav-cart" onclick="toggleCart()">
-      🛒 Carrinho
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  
-  <!-- SVG Wheel -->
-  <svg class="hero-wheel" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="200" cy="200" r="190" stroke="white" stroke-width="8"/>
-    <circle cx="200" cy="200" r="30" stroke="white" stroke-width="8"/>
-    <line x1="200" y1="30" x2="200" y2="170" stroke="white" stroke-width="3"/>
-    <line x1="200" y1="230" x2="200" y2="370" stroke="white" stroke-width="3"/>
-    <line x1="30" y1="200" x2="170" y2="200" stroke="white" stroke-width="3"/>
-    <line x1="230" y1="200" x2="370" y2="200" stroke="white" stroke-width="3"/>
-    <line x1="57" y1="57" x2="179" y2="179" stroke="white" stroke-width="3"/>
-    <line x1="221" y1="221" x2="343" y2="343" stroke="white" stroke-width="3"/>
-    <line x1="343" y1="57" x2="221" y2="179" stroke="white" stroke-width="3"/>
-    <line x1="179" y1="221" x2="57" y2="343" stroke="white" stroke-width="3"/>
-    <circle cx="200" cy="200" r="140" stroke="white" stroke-width="2" stroke-dasharray="8 8"/>
-    <circle cx="200" cy="200" r="80" stroke="white" stroke-width="1" stroke-dasharray="4 12"/>
-  </svg>
-
-  <div class="hero-content">
-    <div class="hero-eyebrow">Desde 2010 — Rio de Janeiro</div>
-    <h1 class="hero-title">
-      <span class="line"><span>PEDAL</span></span>
-      <span class="line"><span>SEM <span class="accent">LIMITES</span></span></span>
-    </h1>
-    <p class="hero-desc">Especialistas em venda, conserto e reforma de bicicletas. Do urbano ao MTB, temos tudo para sua bike performar no máximo.</p>
-    <div class="hero-actions">
-      <button class="btn-primary" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">VER PRODUTOS</button>
-      <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">NOSSOS SERVIÇOS</button>
-    </div>
-  </div>
-
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num" data-count="2800">0</div>
-      <div class="stat-label">Bikes Reparadas</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" data-count="15">0</div>
-      <div class="stat-label">Anos de Experiência</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" data-count="500">0</div>
-      <div class="stat-label">Produtos</div>
-    </div>
-  </div>
-
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    Scroll
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track" id="marqueeTrack">
-    <div class="marquee-item"><span class="marquee-dot"></span>Conserto Expresso</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
-    <!-- duplicated for seamless loop -->
-    <div class="marquee-item"><span class="marquee-dot"></span>Conserto Expresso</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
-    <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<section id="services">
-  <div class="section-header reveal">
-    <div class="section-label">O que fazemos</div>
-    <h2 class="section-title">NOSSOS<br><span class="accent">SERVIÇOS</span></h2>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div class="service-num">01</div>
-      <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-      </svg>
-      <div class="service-name">Conserto & Manutenção</div>
-      <p class="service-desc">Diagnóstico completo e reparos técnicos precisos. Do ajuste de marcha à substituição de rolamentos, sua bike volta a performar.</p>
-      <a href="#contato" class="service-link">Agendar →</a>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-num">02</div>
-      <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-      </svg>
-      <div class="service-name">Reforma Completa</div>
-      <p class="service-desc">Transformamos sua bike antiga em uma máquina nova. Pintura, componentes, câmbio, freios — restauração completa.</p>
-      <a href="#contato" class="service-link">Solicitar orçamento →</a>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-num">03</div>
-      <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-      </svg>
-      <div class="service-name">Venda de Peças</div>
-      <p class="service-desc">Mais de 500 itens em estoque. Câmbios, correntes, pneus, pedivelas, selins e muito mais de marcas top.</p>
-      <a href="#produtos" class="service-link">Ver catálogo →</a>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-num">04</div>
-      <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-      <div class="service-name">Revisão Técnica</div>
-      <p class="service-desc">Check-up completo com 30 pontos de inspeção. Segurança garantida para suas pedaladas no asfalto ou trilha.</p>
-      <a href="#contato" class="service-link">Agendar revisão →</a>
-    </div>
-  </div>
-</section>
-
-<!-- PRODUCTS -->
-<section id="produtos">
-  <div class="section-header reveal">
-    <div class="section-label">Catálogo</div>
-    <h2 class="section-title">NOSSOS<br><span class="accent">PRODUTOS</span></h2>
-  </div>
-
-  <div class="filter-bar" id="filterBar">
-    <button class="filter-btn active" onclick="filterProducts('todos', this)">Todos</button>
-    <button class="filter-btn" onclick="filterProducts('bikes', this)">Bicicletas</button>
-    <button class="filter-btn" onclick="filterProducts('pecas', this)">Peças</button>
-    <button class="filter-btn" onclick="filterProducts('acessorios', this)">Acessórios</button>
-    <button class="filter-btn" onclick="filterProducts('protecao', this)">Proteção</button>
-  </div>
-
-  <div class="products-grid" id="productsGrid"></div>
-</section>
-
-<!-- CTA BANNER -->
-<div id="cta-banner">
-  <div class="cta-bg-text">BIKE</div>
-  <div class="cta-content reveal">
-    <h2 class="cta-title">SUA BIKE MERECE O MELHOR</h2>
-    <p class="cta-sub">Agende agora sua revisão completa e ganhe 15% de desconto em peças.</p>
-    <button class="btn-dark" onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR AGORA</button>
-  </div>
-</div>
-
-<!-- BRANDS -->
-<section id="marcas">
-  <div class="brands-label">Marcas que trabalhamos</div>
-  <div class="brands-row">
-    <div class="brand-logo">SHIMANO</div>
-    <div class="brand-logo">SRAM</div>
-    <div class="brand-logo">TREK</div>
-    <div class="brand-logo">SPECIALIZED</div>
-    <div class="brand-logo">CALOI</div>
-    <div class="brand-logo">OGGI</div>
-    <div class="brand-logo">SCOTT</div>
-    <div class="brand-logo">GIANT</div>
-  </div>
-</section>
-
-<!-- WORKSHOP -->
-<section id="workshop">
-  <div class="workshop-layout">
-    <div class="workshop-visual reveal">
-      <div class="workshop-visual-bg">🔧</div>
-      <div class="workshop-visual-overlay"></div>
-      <div class="workshop-badge">
-        15<span>Anos de<br>Experiência</span>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="section-label">Nossa oficina</div>
-      <h2 class="section-title" style="font-size:clamp(40px,6vw,80px)">OFICINA<br><span class="accent">PRO</span></h2>
-      <p style="color:var(--gray);font-size:15px;line-height:1.8;margin-top:20px;max-width:460px;">
-        Nossa oficina conta com bancadas equipadas, ferramentas especializadas e técnicos certificados. Atendemos de urgências a reformas completas com pontualidade e qualidade.
-      </p>
-      <div class="workshop-list">
-        <div class="workshop-item">
-          <div class="workshop-item-icon">⚡</div>
-          <div class="workshop-item-text">Revisão Express (1h)</div>
-          <div class="workshop-item-price">R$80</div>
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="load-text">
+            <span>V</span><span>E</span><span>L</span><span>O</span><span>C</span><span>I</span><span>T</span><span>T</span><span>A</span>
         </div>
-        <div class="workshop-item">
-          <div class="workshop-item-icon">🔧</div>
-          <div class="workshop-item-text">Revisão Completa</div>
-          <div class="workshop-item-price">R$180</div>
+        <div class="load-bar">
+            <div class="load-fill" id="loadFill"></div>
         </div>
-        <div class="workshop-item">
-          <div class="workshop-item-icon">🎨</div>
-          <div class="workshop-item-text">Pintura + Reforma</div>
-          <div class="workshop-item-price">R$450</div>
+        <div class="load-sub" id="loadSub">Carregando experiência...</div>
+    </div>
+
+    <!-- CART OVERLAY -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- CART SIDEBAR -->
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <div class="cart-title">CARRINHO</div>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
         </div>
-        <div class="workshop-item">
-          <div class="workshop-item-icon">🏆</div>
-          <div class="workshop-item-text">Montagem Completa</div>
-          <div class="workshop-item-price">R$300</div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="cart-empty-icon">🚲</div>
+                <div class="cart-empty-text">Carrinho vazio</div>
+            </div>
         </div>
-      </div>
-      <button class="btn-primary" onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR NA OFICINA</button>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="depoimentos">
-  <div class="section-header reveal">
-    <div class="section-label">Avaliações</div>
-    <h2 class="section-title">O QUE DIZEM<br><span class="accent">NOSSOS CLIENTES</span></h2>
-  </div>
-  <div class="testimonials-grid">
-    <div class="testimonial-card reveal">
-      <div class="stars">★★★★★</div>
-      <p class="testimonial-text">Levei minha MTB que estava com câmbio travado e voltei pedalando perfeitamente. Atendimento incrível, preço justo e entregaram no prazo prometido.</p>
-      <div class="testimonial-author">Rafael Mendonça</div>
-      <div class="testimonial-role">Ciclista MTB • Niterói</div>
-    </div>
-    <div class="testimonial-card reveal">
-      <div class="stars">★★★★★</div>
-      <p class="testimonial-text">Comprei um conjunto de pedivelas Shimano e pedivela chegou em perfeito estado. A loja tem ótimos preços e entrega rápida. Já sou cliente fiel!</p>
-      <div class="testimonial-author">Camila Torres</div>
-      <div class="testimonial-role">Ciclismo Urbano • Rio de Janeiro</div>
-    </div>
-    <div class="testimonial-card reveal">
-      <div class="stars">★★★★★</div>
-      <p class="testimonial-text">Fiz a reforma completa da minha Speed antiga. Pintaram de preto fosco, trocaram todos os cabos e a bike pareceu outra. Trabalho impecável!</p>
-      <div class="testimonial-author">Bruno Carvalho</div>
-      <div class="testimonial-role">Speed & Triathlon • Barra da Tijuca</div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contato">
-  <div class="section-header reveal">
-    <div class="section-label">Fale conosco</div>
-    <h2 class="section-title">ENTRE EM<br><span class="accent">CONTATO</span></h2>
-  </div>
-  <div class="contact-layout">
-    <div class="contact-info reveal">
-      <div class="contact-item">
-        <div class="contact-item-icon">📍</div>
-        <div>
-          <div class="contact-item-label">Endereço</div>
-          <div class="contact-item-value">Av. Brasil, 1200 — Méier<br>Rio de Janeiro, RJ</div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <div class="cart-total-label">Total</div>
+                <div class="cart-total-value" id="cartTotal">R$ 0</div>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">FINALIZAR PEDIDO →</button>
         </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-item-icon">📞</div>
-        <div>
-          <div class="contact-item-label">Telefone & WhatsApp</div>
-          <div class="contact-item-value">(21) 99999-8888</div>
+    </div>
+
+    <!-- NAV -->
+    <nav id="mainNav">
+        <a class="nav-logo" href="#">
+            <div class="logo-dot"></div>
+            VELOCITTA
+        </a>
+        <ul class="nav-links">
+            <li><a href="#services">Serviços</a></li>
+            <li><a href="#produtos">Produtos</a></li>
+            <li><a href="#workshop">Oficina</a></li>
+            <li><a href="#depoimentos">Avaliações</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="nav-cart" onclick="toggleCart()">
+                🛒 Carrinho
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
         </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-item-icon">🕐</div>
-        <div>
-          <div class="contact-item-label">Horário de Funcionamento</div>
-          <div class="contact-item-value">Seg–Sex: 8h–18h<br>Sáb: 8h–14h</div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+
+        <!-- SVG Wheel -->
+        <svg class="hero-wheel" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="200" r="190" stroke="white" stroke-width="8" />
+            <circle cx="200" cy="200" r="30" stroke="white" stroke-width="8" />
+            <line x1="200" y1="30" x2="200" y2="170" stroke="white" stroke-width="3" />
+            <line x1="200" y1="230" x2="200" y2="370" stroke="white" stroke-width="3" />
+            <line x1="30" y1="200" x2="170" y2="200" stroke="white" stroke-width="3" />
+            <line x1="230" y1="200" x2="370" y2="200" stroke="white" stroke-width="3" />
+            <line x1="57" y1="57" x2="179" y2="179" stroke="white" stroke-width="3" />
+            <line x1="221" y1="221" x2="343" y2="343" stroke="white" stroke-width="3" />
+            <line x1="343" y1="57" x2="221" y2="179" stroke="white" stroke-width="3" />
+            <line x1="179" y1="221" x2="57" y2="343" stroke="white" stroke-width="3" />
+            <circle cx="200" cy="200" r="140" stroke="white" stroke-width="2" stroke-dasharray="8 8" />
+            <circle cx="200" cy="200" r="80" stroke="white" stroke-width="1" stroke-dasharray="4 12" />
+        </svg>
+
+        <div class="hero-content">
+            <div class="hero-eyebrow">Desde 2010 — Rio de Janeiro</div>
+            <h1 class="hero-title">
+                <span class="line"><span>PEDAL</span></span>
+                <span class="line"><span>SEM <span class="accent">LIMITES</span></span></span>
+            </h1>
+            <p class="hero-desc">Especialistas em venda, conserto e reforma de bicicletas. Do urbano ao MTB, temos tudo
+                para sua bike performar no máximo.</p>
+            <div class="hero-actions">
+                <button class="btn-primary"
+                    onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">VER
+                    PRODUTOS</button>
+                <button class="btn-outline"
+                    onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">NOSSOS
+                    SERVIÇOS</button>
+            </div>
         </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-item-icon">✉️</div>
-        <div>
-          <div class="contact-item-label">E-mail</div>
-          <div class="contact-item-value">contato@velocitta.com.br</div>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num" data-count="2800">0</div>
+                <div class="stat-label">Bikes Reparadas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num" data-count="15">0</div>
+                <div class="stat-label">Anos de Experiência</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num" data-count="500">0</div>
+                <div class="stat-label">Produtos</div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="contact-form reveal">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nome</label>
-          <input class="form-input" type="text" placeholder="Seu nome completo">
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            Scroll
         </div>
-        <div class="form-group">
-          <label class="form-label">Telefone</label>
-          <input class="form-input" type="tel" placeholder="(21) 99999-0000">
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track" id="marqueeTrack">
+            <div class="marquee-item"><span class="marquee-dot"></span>Conserto Expresso</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
+            <!-- duplicated for seamless loop -->
+            <div class="marquee-item"><span class="marquee-dot"></span>Conserto Expresso</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">E-mail</label>
-        <input class="form-input" type="email" placeholder="seu@email.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Serviço de Interesse</label>
-        <select class="form-select">
-          <option value="">Selecione um serviço...</option>
-          <option>Revisão Express</option>
-          <option>Revisão Completa</option>
-          <option>Conserto Específico</option>
-          <option>Reforma Completa</option>
-          <option>Orçamento de Peças</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mensagem</label>
-        <textarea class="form-textarea" placeholder="Descreva o que precisa ou qual problema está com sua bike..."></textarea>
-      </div>
-      <button class="btn-primary" onclick="submitForm()">ENVIAR MENSAGEM</button>
     </div>
-  </div>
-</section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand-name">VELOCI<span>TTA</span></div>
-      <p class="footer-desc">A sua loja especializada em bicicletas no Rio de Janeiro. Vendas, consertos, reformas e acessórios premium desde 2010.</p>
-      <div class="footer-social">
-        <a href="#" title="Instagram">📸</a>
-        <a href="#" title="Facebook">📘</a>
-        <a href="#" title="WhatsApp">💬</a>
-        <a href="#" title="YouTube">▶️</a>
-      </div>
+    <!-- SERVICES -->
+    <section id="services">
+        <div class="section-header reveal">
+            <div class="section-label">O que fazemos</div>
+            <h2 class="section-title">NOSSOS<br><span class="accent">SERVIÇOS</span></h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-num">01</div>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                        d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+                <div class="service-name">Conserto & Manutenção</div>
+                <p class="service-desc">Diagnóstico completo e reparos técnicos precisos. Do ajuste de marcha à
+                    substituição de rolamentos, sua bike volta a performar.</p>
+                <a href="#contato" class="service-link">Agendar →</a>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">02</div>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="23 4 23 10 17 10" />
+                    <polyline points="1 20 1 14 7 14" />
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                <div class="service-name">Reforma Completa</div>
+                <p class="service-desc">Transformamos sua bike antiga em uma máquina nova. Pintura, componentes, câmbio,
+                    freios — restauração completa.</p>
+                <a href="#contato" class="service-link">Solicitar orçamento →</a>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">03</div>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                <div class="service-name">Venda de Peças</div>
+                <p class="service-desc">Mais de 500 itens em estoque. Câmbios, correntes, pneus, pedivelas, selins e
+                    muito mais de marcas top.</p>
+                <a href="#produtos" class="service-link">Ver catálogo →</a>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">04</div>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <div class="service-name">Revisão Técnica</div>
+                <p class="service-desc">Check-up completo com 30 pontos de inspeção. Segurança garantida para suas
+                    pedaladas no asfalto ou trilha.</p>
+                <a href="#contato" class="service-link">Agendar revisão →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="produtos">
+        <div class="section-header reveal">
+            <div class="section-label">Catálogo</div>
+            <h2 class="section-title">NOSSOS<br><span class="accent">PRODUTOS</span></h2>
+        </div>
+
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" onclick="filterProducts('todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filterProducts('bikes', this)">Bicicletas</button>
+            <button class="filter-btn" onclick="filterProducts('pecas', this)">Peças</button>
+            <button class="filter-btn" onclick="filterProducts('acessorios', this)">Acessórios</button>
+            <button class="filter-btn" onclick="filterProducts('protecao', this)">Proteção</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <div id="cta-banner">
+        <div class="cta-bg-text">BIKE</div>
+        <div class="cta-content reveal">
+            <h2 class="cta-title">SUA BIKE MERECE O MELHOR</h2>
+            <p class="cta-sub">Agende agora sua revisão completa e ganhe 15% de desconto em peças.</p>
+            <button class="btn-dark"
+                onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR AGORA</button>
+        </div>
     </div>
-    <div>
-      <div class="footer-col-title">Serviços</div>
-      <ul class="footer-links">
-        <li><a href="#">Conserto de Bikes</a></li>
-        <li><a href="#">Reforma Completa</a></li>
-        <li><a href="#">Revisão Técnica</a></li>
-        <li><a href="#">Pintura</a></li>
-        <li><a href="#">Montagem</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Produtos</div>
-      <ul class="footer-links">
-        <li><a href="#">Bicicletas MTB</a></li>
-        <li><a href="#">Speed & Road</a></li>
-        <li><a href="#">Urbanas</a></li>
-        <li><a href="#">Peças & Componentes</a></li>
-        <li><a href="#">Acessórios</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Informações</div>
-      <ul class="footer-links">
-        <li><a href="#">Sobre Nós</a></li>
-        <li><a href="#">Blog de Ciclismo</a></li>
-        <li><a href="#">Política de Trocas</a></li>
-        <li><a href="#">Privacidade</a></li>
-        <li><a href="#">Trabalhe Conosco</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2025 VELOCITTA — Todos os direitos reservados</div>
-    <div class="footer-copy">Feito com 🧡 para os ciclistas do Rio</div>
-  </div>
-</footer>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+    <!-- BRANDS -->
+    <section id="marcas">
+        <div class="brands-label">Marcas que trabalhamos</div>
+        <div class="brands-row">
+            <div class="brand-logo">SHIMANO</div>
+            <div class="brand-logo">SRAM</div>
+            <div class="brand-logo">TREK</div>
+            <div class="brand-logo">SPECIALIZED</div>
+            <div class="brand-logo">CALOI</div>
+            <div class="brand-logo">OGGI</div>
+            <div class="brand-logo">SCOTT</div>
+            <div class="brand-logo">GIANT</div>
+        </div>
+    </section>
 
-<!-- WHATSAPP FLOAT -->
-<div class="whatsapp-float" onclick="showToast('Redirecionando para o WhatsApp...')">💬</div>
+    <!-- WORKSHOP -->
+    <section id="workshop">
+        <div class="workshop-layout">
+            <div class="workshop-visual reveal">
+                <div class="workshop-visual-bg">🔧</div>
+                <div class="workshop-visual-overlay"></div>
+                <div class="workshop-badge">
+                    15<span>Anos de<br>Experiência</span>
+                </div>
+            </div>
+            <div class="reveal">
+                <div class="section-label">Nossa oficina</div>
+                <h2 class="section-title" style="font-size:clamp(40px,6vw,80px)">OFICINA<br><span
+                        class="accent">PRO</span></h2>
+                <p style="color:var(--gray);font-size:15px;line-height:1.8;margin-top:20px;max-width:460px;">
+                    Nossa oficina conta com bancadas equipadas, ferramentas especializadas e técnicos certificados.
+                    Atendemos de urgências a reformas completas com pontualidade e qualidade.
+                </p>
+                <div class="workshop-list">
+                    <div class="workshop-item">
+                        <div class="workshop-item-icon">⚡</div>
+                        <div class="workshop-item-text">Revisão Express (1h)</div>
+                        <div class="workshop-item-price">R$80</div>
+                    </div>
+                    <div class="workshop-item">
+                        <div class="workshop-item-icon">🔧</div>
+                        <div class="workshop-item-text">Revisão Completa</div>
+                        <div class="workshop-item-price">R$180</div>
+                    </div>
+                    <div class="workshop-item">
+                        <div class="workshop-item-icon">🎨</div>
+                        <div class="workshop-item-text">Pintura + Reforma</div>
+                        <div class="workshop-item-price">R$450</div>
+                    </div>
+                    <div class="workshop-item">
+                        <div class="workshop-item-icon">🏆</div>
+                        <div class="workshop-item-text">Montagem Completa</div>
+                        <div class="workshop-item-price">R$300</div>
+                    </div>
+                </div>
+                <button class="btn-primary"
+                    onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR NA
+                    OFICINA</button>
+            </div>
+        </div>
+    </section>
 
-<script>
-  // =====================
-  // API INTEGRATION
-  // =====================
-  const API_BASE = 'http://localhost:3001/api';
-  let authToken = localStorage.getItem('velocitta_token') || null;
-  let currentUser = JSON.parse(localStorage.getItem('velocitta_user') || 'null');
+    <!-- TESTIMONIALS -->
+    <section id="depoimentos">
+        <div class="section-header reveal">
+            <div class="section-label">Avaliações</div>
+            <h2 class="section-title">O QUE DIZEM<br><span class="accent">NOSSOS CLIENTES</span></h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card reveal">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">Levei minha MTB que estava com câmbio travado e voltei pedalando
+                    perfeitamente. Atendimento incrível, preço justo e entregaram no prazo prometido.</p>
+                <div class="testimonial-author">Rafael Mendonça</div>
+                <div class="testimonial-role">Ciclista MTB • Niterói</div>
+            </div>
+            <div class="testimonial-card reveal">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">Comprei um conjunto de pedivelas Shimano e pedivela chegou em perfeito
+                    estado. A loja tem ótimos preços e entrega rápida. Já sou cliente fiel!</p>
+                <div class="testimonial-author">Camila Torres</div>
+                <div class="testimonial-role">Ciclismo Urbano • Rio de Janeiro</div>
+            </div>
+            <div class="testimonial-card reveal">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">Fiz a reforma completa da minha Speed antiga. Pintaram de preto fosco,
+                    trocaram todos os cabos e a bike pareceu outra. Trabalho impecável!</p>
+                <div class="testimonial-author">Bruno Carvalho</div>
+                <div class="testimonial-role">Speed & Triathlon • Barra da Tijuca</div>
+            </div>
+        </div>
+    </section>
 
-  const api = {
-    async get(path) {
-      const res = await fetch(API_BASE + path, {
-        headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
-      });
-      return res.json();
-    },
-    async post(path, body) {
-      const res = await fetch(API_BASE + path, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {})
-        },
-        body: JSON.stringify(body)
-      });
-      return res.json();
-    }
-  };
+    <!-- CONTACT -->
+    <section id="contato">
+        <div class="section-header reveal">
+            <div class="section-label">Fale conosco</div>
+            <h2 class="section-title">ENTRE EM<br><span class="accent">CONTATO</span></h2>
+        </div>
+        <div class="contact-layout">
+            <div class="contact-info reveal">
+                <div class="contact-item">
+                    <div class="contact-item-icon">📍</div>
+                    <div>
+                        <div class="contact-item-label">Endereço</div>
+                        <div class="contact-item-value">Av. Brasil, 1200 — Méier<br>Rio de Janeiro, RJ</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">📞</div>
+                    <div>
+                        <div class="contact-item-label">Telefone & WhatsApp</div>
+                        <div class="contact-item-value">(21) 99999-8888</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">🕐</div>
+                    <div>
+                        <div class="contact-item-label">Horário de Funcionamento</div>
+                        <div class="contact-item-value">Seg–Sex: 8h–18h<br>Sáb: 8h–14h</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">✉️</div>
+                    <div>
+                        <div class="contact-item-label">E-mail</div>
+                        <div class="contact-item-value">contato@velocitta.com.br</div>
+                    </div>
+                </div>
+            </div>
 
-  // Load products from backend (falls back to local data if backend offline)
-  async function loadProductsFromAPI() {
-    try {
-      const { products: apiProducts } = await api.get('/products?limit=12&sort=featured');
-      if (apiProducts && apiProducts.length > 0) {
-        window._apiProducts = apiProducts.map(p => ({
-          id: p.id,
-          name: p.name,
-          cat: p.category_slug || 'pecas',
-          price: p.price,
-          oldPrice: p.price_old,
-          emoji: p.emoji || '🚲',
-          badge: p.badge,
-          badgeLabel: p.badge_label
-        }));
-        renderProducts(currentFilter, window._apiProducts);
-        return true;
-      }
-    } catch(e) { /* backend offline, usa dados locais */ }
-    return false;
-  }
+            <div class="contact-form reveal">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nome</label>
+                        <input class="form-input" type="text" placeholder="Seu nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefone</label>
+                        <input class="form-input" type="tel" placeholder="(21) 99999-0000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Serviço de Interesse</label>
+                    <select class="form-select">
+                        <option value="">Selecione um serviço...</option>
+                        <option>Revisão Express</option>
+                        <option>Revisão Completa</option>
+                        <option>Conserto Específico</option>
+                        <option>Reforma Completa</option>
+                        <option>Orçamento de Peças</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mensagem</label>
+                    <textarea class="form-textarea"
+                        placeholder="Descreva o que precisa ou qual problema está com sua bike..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="submitForm()">ENVIAR MENSAGEM</button>
+            </div>
+        </div>
+    </section>
 
-  // Load services from backend
-  async function loadServicesFromAPI() {
-    try {
-      const { services } = await api.get('/services');
-      if (services && services.length > 0) {
-        const list = document.querySelector('.workshop-list');
-        if (list) {
-          list.innerHTML = services.slice(0, 4).map(s => `
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand-name">VELOCI<span>TTA</span></div>
+                <p class="footer-desc">A sua loja especializada em bicicletas no Rio de Janeiro. Vendas, consertos,
+                    reformas e acessórios premium desde 2010.</p>
+                <div class="footer-social">
+                    <a href="#" title="Instagram">📸</a>
+                    <a href="#" title="Facebook">📘</a>
+                    <a href="#" title="WhatsApp">💬</a>
+                    <a href="#" title="YouTube">▶️</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer-col-title">Serviços</div>
+                <ul class="footer-links">
+                    <li><a href="#">Conserto de Bikes</a></li>
+                    <li><a href="#">Reforma Completa</a></li>
+                    <li><a href="#">Revisão Técnica</a></li>
+                    <li><a href="#">Pintura</a></li>
+                    <li><a href="#">Montagem</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Produtos</div>
+                <ul class="footer-links">
+                    <li><a href="#">Bicicletas MTB</a></li>
+                    <li><a href="#">Speed & Road</a></li>
+                    <li><a href="#">Urbanas</a></li>
+                    <li><a href="#">Peças & Componentes</a></li>
+                    <li><a href="#">Acessórios</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Informações</div>
+                <ul class="footer-links">
+                    <li><a href="#">Sobre Nós</a></li>
+                    <li><a href="#">Blog de Ciclismo</a></li>
+                    <li><a href="#">Política de Trocas</a></li>
+                    <li><a href="#">Privacidade</a></li>
+                    <li><a href="#">Trabalhe Conosco</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copy">© 2025 VELOCITTA — Todos os direitos reservados</div>
+            <div class="footer-copy">Feito com 🧡 para os ciclistas do Rio</div>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- WHATSAPP FLOAT -->
+    <div class="whatsapp-float" onclick="showToast('Redirecionando para o WhatsApp...')">💬</div>
+
+    <script>
+        // =====================
+        // API INTEGRATION
+        // =====================
+        const API_BASE = 'http://localhost:3001/api';
+        let authToken = localStorage.getItem('velocitta_token') || null;
+        let currentUser = JSON.parse(localStorage.getItem('velocitta_user') || 'null');
+
+        const api = {
+            async get(path) {
+                const res = await fetch(API_BASE + path, {
+                    headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+                });
+                return res.json();
+            },
+            async post(path, body) {
+                const res = await fetch(API_BASE + path, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {})
+                    },
+                    body: JSON.stringify(body)
+                });
+                return res.json();
+            }
+        };
+
+        // Load products from backend (falls back to local data if backend offline)
+        async function loadProductsFromAPI() {
+            try {
+                const { products: apiProducts } = await api.get('/products?limit=12&sort=featured');
+                if (apiProducts && apiProducts.length > 0) {
+                    window._apiProducts = apiProducts.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        cat: p.category_slug || 'pecas',
+                        price: p.price,
+                        oldPrice: p.price_old,
+                        emoji: p.emoji || '🚲',
+                        badge: p.badge,
+                        badgeLabel: p.badge_label
+                    }));
+                    renderProducts(currentFilter, window._apiProducts);
+                    return true;
+                }
+            } catch (e) { /* backend offline, usa dados locais */ }
+            return false;
+        }
+
+        // Load services from backend
+        async function loadServicesFromAPI() {
+            try {
+                const { services } = await api.get('/services');
+                if (services && services.length > 0) {
+                    const list = document.querySelector('.workshop-list');
+                    if (list) {
+                        list.innerHTML = services.slice(0, 4).map(s => `
             <div class="workshop-item">
               <div class="workshop-item-icon">🔧</div>
               <div class="workshop-item-text">${s.name}</div>
               <div class="workshop-item-price">R$${s.price}</div>
             </div>
           `).join('');
+                    }
+                }
+            } catch (e) { }
         }
-      }
-    } catch(e) {}
-  }
 
-  // Submit appointment to API
-  async function submitAppointmentToAPI(data) {
-    try {
-      const result = await api.post('/appointments', data);
-      return result;
-    } catch(e) {
-      return { message: 'Mensagem enviada!' };
-    }
-  }
+        // Submit appointment to API
+        async function submitAppointmentToAPI(data) {
+            try {
+                const result = await api.post('/appointments', data);
+                return result;
+            } catch (e) {
+                return { message: 'Mensagem enviada!' };
+            }
+        }
 
-  // Submit contact to API
-  async function submitContactToAPI(data) {
-    try {
-      return await api.post('/contact', data);
-    } catch(e) {
-      return { message: 'Mensagem enviada!' };
-    }
-  }
+        // Submit contact to API
+        async function submitContactToAPI(data) {
+            try {
+                return await api.post('/contact', data);
+            } catch (e) {
+                return { message: 'Mensagem enviada!' };
+            }
+        }
 
-  // Submit order to API
-  async function submitOrderToAPI(items) {
-    if (!authToken) {
-      showToast('⚠️ Faça login para finalizar o pedido!');
-      return null;
-    }
-    try {
-      return await api.post('/orders', {
-        items: items.map(i => ({ product_id: i.id, quantity: i.qty })),
-        payment_method: 'pix'
-      });
-    } catch(e) {
-      return null;
-    }
-  }
+        // Submit order to API
+        async function submitOrderToAPI(items) {
+            if (!authToken) {
+                showToast('⚠️ Faça login para finalizar o pedido!');
+                return null;
+            }
+            try {
+                return await api.post('/orders', {
+                    items: items.map(i => ({ product_id: i.id, quantity: i.qty })),
+                    payment_method: 'pix'
+                });
+            } catch (e) {
+                return null;
+            }
+        }
 
-  // =====================
-  // CURSOR
-  // =====================
-  const cursor = document.getElementById('cursor');
-  const cursorRing = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
+        // =====================
+        // CURSOR
+        // =====================
+        const cursor = document.getElementById('cursor');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
 
-  document.addEventListener('mousemove', (e) => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
+        document.addEventListener('mousemove', (e) => {
+            mx = e.clientX; my = e.clientY;
+            cursor.style.left = mx + 'px';
+            cursor.style.top = my + 'px';
+        });
 
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    cursorRing.style.left = rx + 'px';
-    cursorRing.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+        function animateRing() {
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px';
+            cursorRing.style.top = ry + 'px';
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
 
-  document.querySelectorAll('button, a, .product-card, .service-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '18px';
-      cursor.style.height = '18px';
-      cursorRing.style.width = '54px';
-      cursorRing.style.height = '54px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '10px';
-      cursor.style.height = '10px';
-      cursorRing.style.width = '36px';
-      cursorRing.style.height = '36px';
-    });
-  });
+        document.querySelectorAll('button, a, .product-card, .service-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.width = '18px';
+                cursor.style.height = '18px';
+                cursorRing.style.width = '54px';
+                cursorRing.style.height = '54px';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.width = '10px';
+                cursor.style.height = '10px';
+                cursorRing.style.width = '36px';
+                cursorRing.style.height = '36px';
+            });
+        });
 
-  // =====================
-  // LOADER
-  // =====================
-  window.addEventListener('load', () => {
-    const fill = document.getElementById('loadFill');
-    const sub = document.getElementById('loadSub');
-    const letters = document.querySelectorAll('#loader .load-text span');
+        // =====================
+        // LOADER
+        // =====================
+        window.addEventListener('load', () => {
+            const fill = document.getElementById('loadFill');
+            const sub = document.getElementById('loadSub');
+            const letters = document.querySelectorAll('#loader .load-text span');
 
-    sub.style.opacity = '1';
-    fill.style.width = '100%';
+            sub.style.opacity = '1';
+            fill.style.width = '100%';
 
-    letters.forEach((l, i) => {
-      setTimeout(() => {
-        l.style.transition = `transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i*0.06}s, opacity 0.4s ease ${i*0.06}s`;
-        l.style.transform = 'translateY(0)';
-        l.style.opacity = '1';
-      }, 100);
-    });
+            letters.forEach((l, i) => {
+                setTimeout(() => {
+                    l.style.transition = `transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 0.06}s, opacity 0.4s ease ${i * 0.06}s`;
+                    l.style.transform = 'translateY(0)';
+                    l.style.opacity = '1';
+                }, 100);
+            });
 
-    setTimeout(() => {
-      const loader = document.getElementById('loader');
-      loader.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      loader.style.opacity = '0';
-      loader.style.transform = 'translateY(-20px)';
-      setTimeout(() => { loader.style.display = 'none'; }, 700);
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                loader.style.opacity = '0';
+                loader.style.transform = 'translateY(-20px)';
+                setTimeout(() => { loader.style.display = 'none'; }, 700);
 
-      // Animate hero title
-      document.querySelectorAll('.hero-title .line span').forEach((el, i) => {
-        setTimeout(() => {
-          el.style.transition = `transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease`;
-          el.style.transform = 'translateY(0)';
-          el.style.opacity = '1';
-        }, i * 200);
-      });
-    }, 2200);
-  });
+                // Animate hero title
+                document.querySelectorAll('.hero-title .line span').forEach((el, i) => {
+                    setTimeout(() => {
+                        el.style.transition = `transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease`;
+                        el.style.transform = 'translateY(0)';
+                        el.style.opacity = '1';
+                    }, i * 200);
+                });
+            }, 2200);
+        });
 
-  // =====================
-  // NAV SCROLL
-  // =====================
-  window.addEventListener('scroll', () => {
-    const nav = document.getElementById('mainNav');
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-  });
+        // =====================
+        // NAV SCROLL
+        // =====================
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
 
-  // =====================
-  // REVEAL ON SCROLL
-  // =====================
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.12 });
+        // =====================
+        // REVEAL ON SCROLL
+        // =====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('visible');
+            });
+        }, { threshold: 0.12 });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // =====================
-  // COUNTER ANIMATION
-  // =====================
-  const counterObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const el = e.target;
-        const target = parseInt(el.dataset.count);
-        let current = 0;
-        const step = target / 60;
-        const timer = setInterval(() => {
-          current = Math.min(current + step, target);
-          el.textContent = Math.floor(current) + (target > 100 ? '+' : '');
-          if (current >= target) clearInterval(timer);
-        }, 25);
-        counterObs.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 });
+        // =====================
+        // COUNTER ANIMATION
+        // =====================
+        const counterObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const el = e.target;
+                    const target = parseInt(el.dataset.count);
+                    let current = 0;
+                    const step = target / 60;
+                    const timer = setInterval(() => {
+                        current = Math.min(current + step, target);
+                        el.textContent = Math.floor(current) + (target > 100 ? '+' : '');
+                        if (current >= target) clearInterval(timer);
+                    }, 25);
+                    counterObs.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
 
-  document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+        document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
-  // =====================
-  // PRODUCTS DATA
-  // =====================
-  const products = [
-    { id: 1, name: 'Câmbio Traseiro Shimano Deore', cat: 'pecas', price: 349, oldPrice: 420, emoji: '⚙️', badge: 'promo', badgeLabel: 'PROMOÇÃO' },
-    { id: 2, name: 'Pneu Maxxis Ardent 29"', cat: 'pecas', price: 189, emoji: '🟤', badge: 'new', badgeLabel: 'NOVO' },
-    { id: 3, name: 'Capacete MTB Fox Speedframe', cat: 'protecao', price: 590, emoji: '⛑️', badge: 'destaque', badgeLabel: 'DESTAQUE' },
-    { id: 4, name: 'Pedivela SRAM NX Eagle', cat: 'pecas', price: 480, oldPrice: 560, emoji: '🔩', badge: 'promo', badgeLabel: 'PROMOÇÃO' },
-    { id: 5, name: 'Bicicleta Caloi Explorer Sport', cat: 'bikes', price: 2890, emoji: '🚲', badge: 'destaque', badgeLabel: 'DESTAQUE' },
-    { id: 6, name: 'Selim Fizik Tundra M1', cat: 'acessorios', price: 310, emoji: '🪑', badge: null },
-    { id: 7, name: 'Luz Dianteira Cygolite 800lm', cat: 'acessorios', price: 220, emoji: '💡', badge: 'new', badgeLabel: 'NOVO' },
-    { id: 8, name: 'Luvas Ciclismo Shimano Explorer', cat: 'protecao', price: 130, emoji: '🧤', badge: null },
-    { id: 9, name: 'Freio Hidráulico Shimano MT200', cat: 'pecas', price: 420, emoji: '🔴', badge: null },
-    { id: 10, name: 'Corrente KMC X12 12v', cat: 'pecas', price: 85, emoji: '⛓️', badge: 'promo', badgeLabel: 'PROMOÇÃO', oldPrice: 110 },
-    { id: 11, name: 'Bicicleta Speed Oggi Cadenza', cat: 'bikes', price: 4200, emoji: '🏎️', badge: 'destaque', badgeLabel: 'DESTAQUE' },
-    { id: 12, name: 'Óculos Oakley Jawbreaker', cat: 'protecao', price: 750, emoji: '🕶️', badge: 'new', badgeLabel: 'NOVO' },
-  ];
+        // =====================
+        // PRODUCTS DATA
+        // =====================
+        const products = [
+            { id: 1, name: 'Câmbio Traseiro Shimano Deore', cat: 'pecas', price: 349, oldPrice: 420, emoji: '⚙️', badge: 'promo', badgeLabel: 'PROMOÇÃO' },
+            { id: 2, name: 'Pneu Maxxis Ardent 29"', cat: 'pecas', price: 189, emoji: '🟤', badge: 'new', badgeLabel: 'NOVO' },
+            { id: 3, name: 'Capacete MTB Fox Speedframe', cat: 'protecao', price: 590, emoji: '⛑️', badge: 'destaque', badgeLabel: 'DESTAQUE' },
+            { id: 4, name: 'Pedivela SRAM NX Eagle', cat: 'pecas', price: 480, oldPrice: 560, emoji: '🔩', badge: 'promo', badgeLabel: 'PROMOÇÃO' },
+            { id: 5, name: 'Bicicleta Caloi Explorer Sport', cat: 'bikes', price: 2890, emoji: '🚲', badge: 'destaque', badgeLabel: 'DESTAQUE' },
+            { id: 6, name: 'Selim Fizik Tundra M1', cat: 'acessorios', price: 310, emoji: '🪑', badge: null },
+            { id: 7, name: 'Luz Dianteira Cygolite 800lm', cat: 'acessorios', price: 220, emoji: '💡', badge: 'new', badgeLabel: 'NOVO' },
+            { id: 8, name: 'Luvas Ciclismo Shimano Explorer', cat: 'protecao', price: 130, emoji: '🧤', badge: null },
+            { id: 9, name: 'Freio Hidráulico Shimano MT200', cat: 'pecas', price: 420, emoji: '🔴', badge: null },
+            { id: 10, name: 'Corrente KMC X12 12v', cat: 'pecas', price: 85, emoji: '⛓️', badge: 'promo', badgeLabel: 'PROMOÇÃO', oldPrice: 110 },
+            { id: 11, name: 'Bicicleta Speed Oggi Cadenza', cat: 'bikes', price: 4200, emoji: '🏎️', badge: 'destaque', badgeLabel: 'DESTAQUE' },
+            { id: 12, name: 'Óculos Oakley Jawbreaker', cat: 'protecao', price: 750, emoji: '🕶️', badge: 'new', badgeLabel: 'NOVO' },
+        ];
 
-  let cart = [];
-  let currentFilter = 'todos';
+        let cart = [];
+        let currentFilter = 'todos';
 
-  function renderProducts(filter, sourceProducts) {
-    const grid = document.getElementById('productsGrid');
-    const src = sourceProducts || window._apiProducts || products;
-    const filtered = filter === 'todos' ? src : src.filter(p => p.cat === filter);
-    grid.innerHTML = filtered.map(p => `
+        function renderProducts(filter, sourceProducts) {
+            const grid = document.getElementById('productsGrid');
+            const src = sourceProducts || window._apiProducts || products;
+            const filtered = filter === 'todos' ? src : src.filter(p => p.cat === filter);
+            grid.innerHTML = filtered.map(p => `
       <div class="product-card" data-cat="${p.cat}">
         <div class="product-img">
           <div class="product-img-placeholder">${p.emoji}</div>
@@ -1418,63 +2410,63 @@
       </div>
     `).join('');
 
-    // re-observe new cards
-    grid.querySelectorAll('.product-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        cursor.style.width = '18px';
-        cursor.style.height = '18px';
-      });
-      card.addEventListener('mouseleave', () => {
-        cursor.style.width = '10px';
-        cursor.style.height = '10px';
-      });
-    });
-  }
+            // re-observe new cards
+            grid.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    cursor.style.width = '18px';
+                    cursor.style.height = '18px';
+                });
+                card.addEventListener('mouseleave', () => {
+                    cursor.style.width = '10px';
+                    cursor.style.height = '10px';
+                });
+            });
+        }
 
-  function getCatLabel(cat) {
-    return { bikes: 'Bicicletas', pecas: 'Peças', acessorios: 'Acessórios', protecao: 'Proteção' }[cat] || cat;
-  }
+        function getCatLabel(cat) {
+            return { bikes: 'Bicicletas', pecas: 'Peças', acessorios: 'Acessórios', protecao: 'Proteção' }[cat] || cat;
+        }
 
-  function filterProducts(filter, btn) {
-    currentFilter = filter;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderProducts(filter);
-  }
+        function filterProducts(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts(filter);
+        }
 
-  renderProducts('todos');
+        renderProducts('todos');
 
-  // =====================
-  // CART
-  // =====================
-  function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    const existing = cart.find(c => c.id === id);
-    if (existing) { existing.qty++; }
-    else { cart.push({ ...product, qty: 1 }); }
-    updateCart();
-    showToast(`${product.emoji} ${product.name} adicionado!`);
-    if (!document.getElementById('cart-sidebar').classList.contains('open')) {
-      toggleCart();
-    }
-  }
+        // =====================
+        // CART
+        // =====================
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(c => c.id === id);
+            if (existing) { existing.qty++; }
+            else { cart.push({ ...product, qty: 1 }); }
+            updateCart();
+            showToast(`${product.emoji} ${product.name} adicionado!`);
+            if (!document.getElementById('cart-sidebar').classList.contains('open')) {
+                toggleCart();
+            }
+        }
 
-  function removeFromCart(id) {
-    cart = cart.filter(c => c.id !== id);
-    updateCart();
-  }
+        function removeFromCart(id) {
+            cart = cart.filter(c => c.id !== id);
+            updateCart();
+        }
 
-  function updateCart() {
-    const count = cart.reduce((s, c) => s + c.qty, 0);
-    const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-    document.getElementById('cartCount').textContent = count;
-    document.getElementById('cartTotal').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
+        function updateCart() {
+            const count = cart.reduce((s, c) => s + c.qty, 0);
+            const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartTotal').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
 
-    const itemsEl = document.getElementById('cartItems');
-    if (cart.length === 0) {
-      itemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🚲</div><div class="cart-empty-text">Carrinho vazio</div></div>`;
-    } else {
-      itemsEl.innerHTML = cart.map(c => `
+            const itemsEl = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                itemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🚲</div><div class="cart-empty-text">Carrinho vazio</div></div>`;
+            } else {
+                itemsEl.innerHTML = cart.map(c => `
         <div class="cart-item">
           <div class="cart-item-thumb">${c.emoji}</div>
           <div class="cart-item-info">
@@ -1485,91 +2477,92 @@
           <button class="cart-item-remove" onclick="removeFromCart(${c.id})">✕</button>
         </div>
       `).join('');
-    }
-  }
+            }
+        }
 
-  function toggleCart() {
-    document.getElementById('cart-sidebar').classList.toggle('open');
-    document.getElementById('cartOverlay').classList.toggle('open');
-  }
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
+            document.getElementById('cartOverlay').classList.toggle('open');
+        }
 
-  async function checkout() {
-    if (cart.length === 0) { showToast('Seu carrinho está vazio!'); return; }
-    const btn = document.querySelector('.btn-checkout');
-    if (btn) { btn.textContent = 'PROCESSANDO...'; btn.disabled = true; }
-    const result = await submitOrderToAPI(cart);
-    if (result && result.order_number) {
-      showToast(`✅ Pedido ${result.order_number} criado! Total: R$ ${result.total?.toFixed(2)}`);
-    } else if (result && result.error) {
-      showToast('❌ ' + result.error);
-      if (btn) { btn.textContent = 'FINALIZAR PEDIDO →'; btn.disabled = false; }
-      return;
-    } else {
-      showToast('✅ Pedido enviado! Entraremos em contato.');
-    }
-    cart = []; updateCart(); toggleCart();
-    if (btn) { btn.textContent = 'FINALIZAR PEDIDO →'; btn.disabled = false; }
-  }
+        async function checkout() {
+            if (cart.length === 0) { showToast('Seu carrinho está vazio!'); return; }
+            const btn = document.querySelector('.btn-checkout');
+            if (btn) { btn.textContent = 'PROCESSANDO...'; btn.disabled = true; }
+            const result = await submitOrderToAPI(cart);
+            if (result && result.order_number) {
+                showToast(`✅ Pedido ${result.order_number} criado! Total: R$ ${result.total?.toFixed(2)}`);
+            } else if (result && result.error) {
+                showToast('❌ ' + result.error);
+                if (btn) { btn.textContent = 'FINALIZAR PEDIDO →'; btn.disabled = false; }
+                return;
+            } else {
+                showToast('✅ Pedido enviado! Entraremos em contato.');
+            }
+            cart = []; updateCart(); toggleCart();
+            if (btn) { btn.textContent = 'FINALIZAR PEDIDO →'; btn.disabled = false; }
+        }
 
-  // =====================
-  // TOAST
-  // =====================
-  let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
-  }
+        // =====================
+        // TOAST
+        // =====================
+        let toastTimer;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+        }
 
-  // =====================
-  // FORM SUBMIT (API)
-  // =====================
-  async function submitForm() {
-    const inputs = document.querySelectorAll('#contato .form-input, #contato .form-select, #contato .form-textarea');
-    const name    = inputs[0]?.value.trim();
-    const phone   = inputs[1]?.value.trim();
-    const email   = inputs[2]?.value.trim();
-    const service = inputs[3]?.value;
-    const message = inputs[4]?.value.trim();
+        // =====================
+        // FORM SUBMIT (API)
+        // =====================
+        async function submitForm() {
+            const inputs = document.querySelectorAll('#contato .form-input, #contato .form-select, #contato .form-textarea');
+            const name = inputs[0]?.value.trim();
+            const phone = inputs[1]?.value.trim();
+            const email = inputs[2]?.value.trim();
+            const service = inputs[3]?.value;
+            const message = inputs[4]?.value.trim();
 
-    if (!name || !email || !message) { showToast('⚠️ Preencha nome, e-mail e mensagem.'); return; }
+            if (!name || !email || !message) { showToast('⚠️ Preencha nome, e-mail e mensagem.'); return; }
 
-    const btn = document.querySelector('#contato .btn-primary');
-    if (btn) { btn.textContent = 'ENVIANDO...'; btn.disabled = true; }
+            const btn = document.querySelector('#contato .btn-primary');
+            if (btn) { btn.textContent = 'ENVIANDO...'; btn.disabled = true; }
 
-    const isAppointment = !!service;
-    let result;
-    if (isAppointment && phone) {
-      result = await submitAppointmentToAPI({ name, email, phone, service_name: service, message });
-    } else {
-      result = await submitContactToAPI({ name, email, phone, service, message });
-    }
+            const isAppointment = !!service;
+            let result;
+            if (isAppointment && phone) {
+                result = await submitAppointmentToAPI({ name, email, phone, service_name: service, message });
+            } else {
+                result = await submitContactToAPI({ name, email, phone, service, message });
+            }
 
-    showToast(result?.message || '✅ Mensagem enviada! Responderemos em breve.');
-    if (btn) { btn.textContent = 'ENVIAR MENSAGEM'; btn.disabled = false; }
-    inputs.forEach(i => { if (i.tagName !== 'SELECT') i.value = ''; else i.selectedIndex = 0; });
-  }
+            showToast(result?.message || '✅ Mensagem enviada! Responderemos em breve.');
+            if (btn) { btn.textContent = 'ENVIAR MENSAGEM'; btn.disabled = false; }
+            inputs.forEach(i => { if (i.tagName !== 'SELECT') i.value = ''; else i.selectedIndex = 0; });
+        }
 
-  // =====================
-  // INIT API DATA
-  // =====================
-  (async () => {
-    await loadProductsFromAPI();
-    await loadServicesFromAPI();
-  })();
+        // =====================
+        // INIT API DATA
+        // =====================
+        (async () => {
+            await loadProductsFromAPI();
+            await loadServicesFromAPI();
+        })();
 
-  // =====================
-  // PARALLAX HERO
-  // =====================
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent) heroContent.style.transform = `translateY(${scrollY * 0.3}px)`;
-    const wheel = document.querySelector('.hero-wheel');
-    if (wheel) wheel.style.transform = `translateY(calc(-50% + ${scrollY * 0.2}px)) rotate(${scrollY * 0.1}deg)`;
-  });
-</script>
+        // =====================
+        // PARALLAX HERO
+        // =====================
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) heroContent.style.transform = `translateY(${scrollY * 0.3}px)`;
+            const wheel = document.querySelector('.hero-wheel');
+            if (wheel) wheel.style.transform = `translateY(calc(-50% + ${scrollY * 0.2}px)) rotate(${scrollY * 0.1}deg)`;
+        });
+    </script>
 </body>
+
 </html>
