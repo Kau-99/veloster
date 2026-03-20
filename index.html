@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VELOCITTA — Bicicletas & Performance</title>
+    <title>CASA DAS BIKES — Bicicletas & Performance</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 </head>
+
 <body>
 
     <div id="cursor"></div>
@@ -16,77 +19,140 @@
 
     <div id="loader">
         <div class="load-text">
-            <span>V</span><span>E</span><span>L</span><span>O</span><span>C</span><span>I</span><span>T</span><span>T</span><span>A</span>
+            <span>C</span><span>A</span><span>S</span><span>A</span>
+            <span style="width: 20px;"></span>
+            <span>D</span><span>A</span><span>S</span>
+            <span style="width: 20px;"></span>
+            <span>B</span><span>I</span><span>K</span><span>E</span><span>S</span>
         </div>
-        <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
-        <div class="load-sub" id="loadSub">Carregando experiência...</div>
+        <div class="load-bar">
+            <div class="load-fill" id="loadFill"></div>
+        </div>
+        <div class="load-sub" id="loadSub">A carregar experiência...</div>
     </div>
-    
-    <div class="toast" id="toast"></div>
+
+    <div class="quick-view-overlay" id="qvOverlay" onclick="closeQuickView()"></div>
+    <div class="quick-view-modal" id="qvModal">
+        <button class="qv-close" onclick="closeQuickView()">✕</button>
+        <div class="qv-content" id="qvContent"></div>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <div class="cart-title">CARRINHO</div>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="cart-empty-icon">🚲</div>
+                <div class="cart-empty-text">Carrinho vazio</div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <div class="cart-total-label">Total</div>
+                <div class="cart-total-value" id="cartTotal">R$ 0,00</div>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">FINALIZAR PEDIDO →</button>
+        </div>
+    </div>
 
     <div id="app-storefront">
-        
-        <div class="whatsapp-float" onclick="showToast('Redirecionando para o WhatsApp...')">💬</div>
         <nav id="mainNav">
             <a class="nav-logo" href="#">
-                <div class="logo-dot"></div>VELOCITTA
+                <div class="logo-dot"></div>CASA DAS BIKES
             </a>
             <ul class="nav-links">
                 <li><a href="#services">Serviços</a></li>
                 <li><a href="#produtos">Produtos</a></li>
                 <li><a href="#workshop">Oficina</a></li>
                 <li><a href="#depoimentos">Avaliações</a></li>
-                <li><a href="#contato">Contato</a></li>
+                <li><a href="#contato">Contacto</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="nav-cart" onclick="toggleCart()">🛒 Carrinho <span class="cart-count" id="cartCount">0</span></button>
+                <a href="#admin" class="nav-admin-link" title="Aceder ao Painel Admin">⚙️ Admin</a>
+                <button class="nav-cart" onclick="toggleCart()">🛒 Carrinho <span class="cart-count"
+                        id="cartCount">0</span></button>
             </div>
         </nav>
 
         <section id="hero">
             <div class="hero-bg"></div>
             <div class="hero-grid"></div>
+
             <svg class="hero-wheel" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="200" cy="200" r="190" stroke="white" stroke-width="8"/>
-                <circle cx="200" cy="200" r="30" stroke="white" stroke-width="8"/>
-                <line x1="200" y1="30" x2="200" y2="170" stroke="white" stroke-width="3"/>
-                <line x1="200" y1="230" x2="200" y2="370" stroke="white" stroke-width="3"/>
-                <line x1="30" y1="200" x2="170" y2="200" stroke="white" stroke-width="3"/>
-                <line x1="230" y1="200" x2="370" y2="200" stroke="white" stroke-width="3"/>
-                <line x1="57" y1="57" x2="179" y2="179" stroke="white" stroke-width="3"/>
-                <line x1="221" y1="221" x2="343" y2="343" stroke="white" stroke-width="3"/>
-                <line x1="343" y1="57" x2="221" y2="179" stroke="white" stroke-width="3"/>
-                <line x1="179" y1="221" x2="57" y2="343" stroke="white" stroke-width="3"/>
-                <circle cx="200" cy="200" r="140" stroke="white" stroke-width="2" stroke-dasharray="8 8"/>
-                <circle cx="200" cy="200" r="80" stroke="white" stroke-width="1" stroke-dasharray="4 12"/>
+                <circle cx="200" cy="200" r="190" stroke="white" stroke-width="8" />
+                <circle cx="200" cy="200" r="30" stroke="white" stroke-width="8" />
+                <line x1="200" y1="30" x2="200" y2="170" stroke="white" stroke-width="3" />
+                <line x1="200" y1="230" x2="200" y2="370" stroke="white" stroke-width="3" />
+                <line x1="30" y1="200" x2="170" y2="200" stroke="white" stroke-width="3" />
+                <line x1="230" y1="200" x2="370" y2="200" stroke="white" stroke-width="3" />
+                <line x1="57" y1="57" x2="179" y2="179" stroke="white" stroke-width="3" />
+                <line x1="221" y1="221" x2="343" y2="343" stroke="white" stroke-width="3" />
+                <line x1="343" y1="57" x2="221" y2="179" stroke="white" stroke-width="3" />
+                <line x1="179" y1="221" x2="57" y2="343" stroke="white" stroke-width="3" />
+                <circle cx="200" cy="200" r="140" stroke="white" stroke-width="2" stroke-dasharray="8 8" />
+                <circle cx="200" cy="200" r="80" stroke="white" stroke-width="1" stroke-dasharray="4 12" />
             </svg>
+
             <div class="hero-content">
-                <div class="hero-eyebrow">Desde 2010 — Rio de Janeiro</div>
+                <div class="hero-eyebrow">A Sua Referência — Rio de Janeiro</div>
                 <h1 class="hero-title">
-                    <span class="line"><span>PEDAL</span></span>
-                    <span class="line"><span>SEM <span class="accent">LIMITES</span></span></span>
+                    <span class="line"><span></span>CUIDAR</span>
+                    <span class="line"><span>DA SUA <span class="accent">BIKE</span></span></span>
                 </h1>
-                <p class="hero-desc">Especialistas em venda, conserto e reforma de bicicletas. Do urbano ao MTB, temos tudo para sua bike performar no máximo.</p>
+                <p class="hero-desc">Especialistas em venda, reparação e reforma de bicicletas. Do urbano ao MTB, temos
+                    tudo para a sua bike performar no máximo.</p>
                 <div class="hero-actions">
-                    <button class="btn-primary" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">VER PRODUTOS</button>
-                    <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">NOSSOS SERVIÇOS</button>
+                    <button class="btn-primary"
+                        onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">VER
+                        PRODUTOS</button>
+                    <button class="btn-outline"
+                        onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">NOSSOS
+                        SERVIÇOS</button>
                 </div>
             </div>
+
             <div class="hero-stats">
-                <div class="stat"><div class="stat-num" data-count="2800">0</div><div class="stat-label">Bikes Reparadas</div></div>
-                <div class="stat"><div class="stat-num" data-count="15">0</div><div class="stat-label">Anos de Experiência</div></div>
-                <div class="stat"><div class="stat-num" data-count="500">0</div><div class="stat-label">Produtos</div></div>
+                <div class="stat">
+                    <div class="stat-num" data-count="2800">0</div>
+                    <div class="stat-label">Bikes Reparadas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" data-count="15">0</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" data-count="500">0</div>
+                    <div class="stat-label">Produtos</div>
+                </div>
+            </div>
+
+            <div class="scroll-indicator">
+                <div class="scroll-line"></div>Scroll
             </div>
         </section>
 
         <div class="marquee-section">
             <div class="marquee-track" id="marqueeTrack">
-                <div class="marquee-item"><span class="marquee-dot"></span>Conserto Expresso</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Reparação Expresso</div>
                 <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
                 <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
                 <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
                 <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
-                </div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Reparação Expresso</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Peças Originais</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Reforma Completa</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Acessórios Premium</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>MTB & Speed</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Urbanas & Dobráveis</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Atendimento Expert</div>
+                <div class="marquee-item"><span class="marquee-dot"></span>Garantia Real</div>
+            </div>
         </div>
 
         <section id="services">
@@ -97,13 +163,44 @@
             <div class="services-grid">
                 <div class="service-card reveal">
                     <div class="service-num">01</div>
-                    <div class="service-name">Conserto & Manutenção</div>
-                    <p class="service-desc">Diagnóstico completo e reparos técnicos precisos. Do ajuste de marcha à substituição de rolamentos.</p>
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path
+                            d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                    </svg>
+                    <div class="service-name">Reparação & Manutenção</div>
+                    <p class="service-desc">Diagnóstico completo e reparações técnicas precisas. Do ajuste de mudança à
+                        substituição de rolamentos, a sua bike volta a performar.</p>
                 </div>
                 <div class="service-card reveal">
                     <div class="service-num">02</div>
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="23 4 23 10 17 10" />
+                        <polyline points="1 20 1 14 7 14" />
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                    </svg>
                     <div class="service-name">Reforma Completa</div>
-                    <p class="service-desc">Transformamos sua bike antiga em uma máquina nova. Pintura, componentes, câmbio, freios.</p>
+                    <p class="service-desc">Transformamos a sua bike antiga numa máquina nova. Pintura, componentes,
+                        mudanças, travões — restauração completa.</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-num">03</div>
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <div class="service-name">Venda de Peças</div>
+                    <p class="service-desc">Mais de 500 itens em stock. Mudanças, correntes, pneus, pedaleiras, selins e
+                        muito mais das melhores marcas.</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-num">04</div>
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <div class="service-name">Revisão Técnica</div>
+                    <p class="service-desc">Check-up completo com 30 pontos de inspeção. Segurança garantida para as
+                        suas pedaladas no asfalto ou nos trilhos.</p>
                 </div>
             </div>
         </section>
@@ -118,30 +215,144 @@
                 <button class="filter-btn" onclick="filterProducts('bikes', this)">Bicicletas</button>
                 <button class="filter-btn" onclick="filterProducts('pecas', this)">Peças</button>
                 <button class="filter-btn" onclick="filterProducts('acessorios', this)">Acessórios</button>
+                <button class="filter-btn" onclick="filterProducts('protecao', this)">Proteção</button>
             </div>
             <div class="products-grid" id="productsGrid"></div>
         </section>
 
+        <div id="cta-banner">
+            <div class="cta-bg-text">BIKE</div>
+            <div class="cta-content reveal">
+                <h2 class="cta-title">A SUA BIKE MERECE O MELHOR</h2>
+                <p class="cta-sub">Agende agora a sua revisão completa e ganhe 15% de desconto em peças.</p>
+                <button class="btn-dark"
+                    onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR
+                    AGORA</button>
+            </div>
+        </div>
+
+        <section id="marcas">
+            <div class="brands-label">Marcas com as quais trabalhamos</div>
+            <div class="brands-row">
+                <div class="brand-logo">SHIMANO</div>
+                <div class="brand-logo">SRAM</div>
+                <div class="brand-logo">TREK</div>
+                <div class="brand-logo">SPECIALIZED</div>
+                <div class="brand-logo">CALOI</div>
+                <div class="brand-logo">OGGI</div>
+                <div class="brand-logo">SCOTT</div>
+                <div class="brand-logo">GIANT</div>
+            </div>
+        </section>
+
+        <section id="workshop">
+            <div class="workshop-layout">
+                <div class="workshop-visual reveal">
+                    <div class="workshop-visual-bg">🔧</div>
+                    <div class="workshop-visual-overlay"></div>
+                    <div class="workshop-badge">15<span>Anos de<br>Experiência</span></div>
+                </div>
+                <div class="reveal">
+                    <div class="section-label">A Nossa Oficina</div>
+                    <h2 class="section-title" style="font-size:clamp(40px,6vw,80px)">OFICINA<br><span
+                            class="accent">PRO</span></h2>
+                    <p style="color:var(--gray);font-size:15px;line-height:1.8;margin-top:20px;max-width:460px;">
+                        A nossa oficina conta com bancadas equipadas, ferramentas especializadas e técnicos
+                        certificados. Atendemos de urgências a reformas completas com pontualidade e qualidade.
+                    </p>
+                    <div class="workshop-list">
+                        <div class="workshop-item">
+                            <div class="workshop-item-icon">⚡</div>
+                            <div class="workshop-item-text">Revisão Expresso (1h)</div>
+                            <div class="workshop-item-price">R$80</div>
+                        </div>
+                        <div class="workshop-item">
+                            <div class="workshop-item-icon">🔧</div>
+                            <div class="workshop-item-text">Revisão Completa</div>
+                            <div class="workshop-item-price">R$180</div>
+                        </div>
+                        <div class="workshop-item">
+                            <div class="workshop-item-icon">🎨</div>
+                            <div class="workshop-item-text">Pintura + Reforma</div>
+                            <div class="workshop-item-price">R$450</div>
+                        </div>
+                        <div class="workshop-item">
+                            <div class="workshop-item-icon">🏆</div>
+                            <div class="workshop-item-text">Montagem Completa</div>
+                            <div class="workshop-item-price">R$300</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary"
+                        onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">AGENDAR NA
+                        OFICINA</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="depoimentos">
+            <div class="section-header reveal">
+                <div class="section-label">Avaliações</div>
+                <h2 class="section-title">O QUE DIZEM<br><span class="accent">OS NOSSOS CLIENTES</span></h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">Levei a minha MTB que estava com a mudança encravada e voltei a pedalar
+                        perfeitamente. Atendimento incrível, preço justo e entregaram no prazo prometido.</p>
+                    <div class="testimonial-author">Rafael Mendonça</div>
+                    <div class="testimonial-role">Ciclista MTB • Niterói</div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">Comprei um conjunto de pedaleiras Shimano e chegou em perfeito estado. A
+                        loja tem ótimos preços e entrega rápida. Já sou cliente fiel!</p>
+                    <div class="testimonial-author">Camila Torres</div>
+                    <div class="testimonial-role">Ciclismo Urbano • Rio de Janeiro</div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">Fiz a reforma completa da minha Speed antiga. Pintaram de preto mate,
+                        trocaram todos os cabos e a bike pareceu outra. Trabalho impecável!</p>
+                    <div class="testimonial-author">Bruno Carvalho</div>
+                    <div class="testimonial-role">Speed & Triathlon • Barra da Tijuca</div>
+                </div>
+            </div>
+        </section>
+
         <section id="contato">
             <div class="section-header reveal">
-                <div class="section-label">Fale conosco</div>
-                <h2 class="section-title">ENTRE EM<br><span class="accent">CONTATO</span></h2>
+                <div class="section-label">Fale connosco</div>
+                <h2 class="section-title">ENTRE EM<br><span class="accent">CONTACTO</span></h2>
             </div>
             <div class="contact-layout">
                 <div class="contact-info reveal">
                     <div class="contact-item">
-                        <div class="contact-item-icon">📍</div>
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
                         <div>
                             <div class="contact-item-label">Endereço</div>
                             <div class="contact-item-value">Av. Brasil, 1200 — Méier<br>Rio de Janeiro, RJ</div>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-item-icon">📞</div>
+                    <div class="contact-item" style="border-bottom: none;">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
                         <div>
                             <div class="contact-item-label">Telefone & WhatsApp</div>
                             <div class="contact-item-value">(21) 99999-8888</div>
                         </div>
+                    </div>
+                    <div class="contact-map">
+                        <iframe
+                            src="https://maps.google.com/maps?q=Av.%20Brasil,%201200%20-%20Meier,%20Rio%20de%20Janeiro&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
 
@@ -161,37 +372,96 @@
                         <input class="form-input" id="c-email" type="email" placeholder="seu@email.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mensagem</label>
-                        <textarea class="form-textarea" id="c-msg" placeholder="Descreva o que precisa..."></textarea>
+                        <label class="form-label">Serviço de Interesse</label>
+                        <select class="form-select" id="c-assunto">
+                            <option value="" disabled selected>Selecione um serviço...</option>
+                            <option value="Revisão Expresso">Revisão Expresso</option>
+                            <option value="Revisão Completa">Revisão Completa</option>
+                            <option value="Reparação Específica">Reparação Específica</option>
+                            <option value="Reforma Completa">Reforma Completa</option>
+                            <option value="Orçamento de Peças">Orçamento de Peças</option>
+                        </select>
                     </div>
-                    <button class="btn-primary" onclick="submitForm()">ENVIAR MENSAGEM</button>
+                    <div class="form-group">
+                        <label class="form-label">Mensagem</label>
+                        <textarea class="form-textarea" id="c-msg"
+                            placeholder="Descreva o que precisa ou qual problema tem com a sua bike..."></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="submitForm()">ENVIAR MENSAGEM →</button>
                 </div>
             </div>
         </section>
 
         <footer>
+            <div class="footer-grid">
+                <div style="grid-column: span 2;">
+                    <div class="footer-brand-name">CASA DAS <span>BIKES</span></div>
+                    <p class="footer-desc">A sua loja especializada em bicicletas no Rio de Janeiro. Vendas, reparações,
+                        reformas e acessórios premium desde 2010.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" title="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" title="WhatsApp">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="footer-col-title">Serviços</div>
+                    <ul class="footer-links">
+                        <li><a href="#">Reparação de Bikes</a></li>
+                        <li><a href="#">Reforma Completa</a></li>
+                        <li><a href="#">Revisão Técnica</a></li>
+                        <li><a href="#">Pintura</a></li>
+                        <li><a href="#">Montagem</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Produtos</div>
+                    <ul class="footer-links">
+                        <li><a href="#">Bicicletas MTB</a></li>
+                        <li><a href="#">Speed & Road</a></li>
+                        <li><a href="#">Urbanas</a></li>
+                        <li><a href="#">Peças & Componentes</a></li>
+                        <li><a href="#">Acessórios</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="footer-bottom">
-                <div class="footer-copy">© 2026 VELOCITTA — Todos os direitos reservados</div>
-                <div class="footer-copy">Acesse o <a href="#admin" style="color:var(--orange); text-decoration:none;">Painel Admin</a></div>
+                <div class="footer-copy">© 2026 CASA DAS BIKES — Todos os direitos reservados</div>
+                <div class="footer-copy">Feito com 🧡 para os ciclistas do Rio</div>
             </div>
         </footer>
     </div>
 
     <div id="app-admin" style="display: none;">
+
         <div id="login-screen">
             <div class="login-box">
-                <div class="login-logo">VELOCI<span>TTA</span></div>
+                <div class="login-logo">CASA DAS <span>BIKES</span></div>
                 <div class="login-sub">Painel Administrativo</div>
-                <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;flex-direction:column;gap:14px;margin-top:20px;">
                     <div class="form-group">
                         <label class="form-label">E-mail</label>
-                        <input class="form-input" id="loginEmail" type="email" value="admin@velocitta.com.br">
+                        <input class="form-input" id="loginEmail" type="email" value="admin@casadasbikes.com.br">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Senha</label>
                         <input class="form-input" id="loginPass" type="password" value="Admin@123">
                     </div>
-                    <button class="btn-login" id="loginBtn" onclick="doLogin()">ENTRAR →</button>
+                    <button class="btn-primary" id="loginBtn" style="margin-top:10px; width:100%;"
+                        onclick="doLogin()">ENTRAR NO PAINEL →</button>
                 </div>
             </div>
         </div>
@@ -199,31 +469,93 @@
         <div id="admin-container" style="display: none; width: 100%; height: 100vh;">
             <div id="sidebar">
                 <div class="sidebar-logo">
-                    <div class="logo-mark">V</div>
-                    <div><div class="logo-text">VELOCITTA</div><div class="logo-sub">Admin Panel</div></div>
+                    <div class="logo-mark">CB</div>
+                    <div>
+                        <div class="logo-text">CASA DAS BIKES</div>
+                        <div class="logo-sub">Admin Panel</div>
+                    </div>
                 </div>
                 <nav class="sidebar-nav">
                     <button class="nav-item active" onclick="showView('dashboard',this)"><span>Dashboard</span></button>
-                    <button class="nav-item" onclick="showView('products',this)"><span>Produtos</span></button>
+                    <button class="nav-item" onclick="showView('products',this)"><span>Catálogo e Stock</span></button>
                 </nav>
-                <div class="sidebar-footer"><button class="btn-logout" onclick="doLogout()">Sair</button></div>
+                <div class="sidebar-footer">
+                    <button class="btn-logout" onclick="doLogout()">⬅ Voltar para Loja</button>
+                </div>
             </div>
 
             <div id="main">
-                <div class="topbar"><div class="topbar-title" id="topbarTitle">DASHBOARD</div></div>
+                <div class="topbar">
+                    <div class="topbar-title" id="topbarTitle">DASHBOARD</div>
+                </div>
                 <div class="content" id="content">
+
                     <div class="view active" id="view-dashboard">
-                        <h2 style="font-family: var(--font-display); font-size: 40px; color: var(--orange);">BEM VINDO AO ADMIN</h2>
-                        <p style="color: var(--gray);">Este é o seu painel de controle. Acesse as abas no menu lateral.</p>
-                    </div>
-                    <div class="view" id="view-products">
-                        <h2 style="font-family: var(--font-display); font-size: 40px;">GERENCIAR PRODUTOS</h2>
+                        <h2 style="font-family: var(--font-display); font-size: 30px; margin-bottom: 20px;">RELATÓRIO DE
+                            HOJE</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card orange">
+                                <div class="stat-value orange" id="admin-revenue-day">R$ 0,00</div>
+                                <div class="stat-label">Receita do Dia</div>
+                            </div>
+                            <div class="stat-card green">
+                                <div class="stat-value green" id="admin-orders-day">0</div>
+                                <div class="stat-label">Vendas Hoje</div>
+                            </div>
                         </div>
+
+                        <h2
+                            style="font-family: var(--font-display); font-size: 24px; margin-top: 40px; margin-bottom: 20px;">
+                            VENDAS RECENTES</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pedido</th>
+                                    <th>Data/Hora</th>
+                                    <th>Itens Comprados</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="view" id="view-products">
+                        <h2 style="font-family: var(--font-display); font-size: 30px; margin-bottom: 20px;">SEUS
+                            PRODUTOS E ESTOQUE</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Estoque</th>
+                                    <th>Preço</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
+    <div class="whatsapp-float" onclick="showToast('A redirecionar para o WhatsApp...')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" style="width: 28px; height: 28px;">
+            <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+            </path>
+        </svg>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
 </html>
